@@ -13,8 +13,8 @@ const StudentDashboard = () => {
   const [amount, setAmount] = useState("");
   const [status, setStatus] = useState("Pending");
   const [submitted, setSubmitted] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false); // Check if user is admin
-  const [pendingRequests, setPendingRequests] = useState([]); // For storing requests if admin
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [pendingRequests, setPendingRequests] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -17,7 +17,6 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* Grid Container */
 .testimonialGrid {
   display: grid;
   gap: 25px;
@@ -29,7 +28,6 @@
   margin: 0 auto;
 }
 
-/* Individual Card */
 .testimonialCard {
   background: rgba(255, 140, 0, 0.15);
   padding: 30px 20px;
@@ -79,7 +77,6 @@
   }
 }
 
-/* Responsive Font Adjustments */
 @media (max-width: 768px) {
   .testimonials {
     padding: 40px 15px;

@@ -1,4 +1,3 @@
-/* ===================== Default Header ===================== */
 .header {
   display: flex;
   justify-content: space-between;
@@ -9,12 +8,10 @@
   position: relative;
 }
 
-/* Logo */
 .logo img {
   width: 120px;
 }
 
-/* Navigation */
 .nav {
   display: flex;
 }
@@ -39,7 +36,6 @@
   color: #ff8c00;
 }
 
-/* Auth Buttons (Signup & Logout) */
 .authButtons {
   display: flex;
   gap: 10px;
@@ -62,7 +58,6 @@
   background-color: #e67600;
 }
 
-/* Hide Nav Toggler by Default */
 .menuToggle {
   display: none;
   font-size: 28px;
@@ -73,13 +68,11 @@
   outline: none;
 }
 
-/* ===================== 768px SCREEN ===================== */
 @media (max-width: 768px) {
   .header {
     padding: 15px 20px;
   }
 
-  /* Hide Desktop Nav */
   .nav {
     display: none;
     flex-direction: column;
@@ -109,7 +102,6 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  /* Show Nav Toggler */
   .menuToggle {
     display: block;
   }
@@ -128,7 +120,6 @@
   }
 }
 
-/* ===================== 468px SCREEN ===================== */
 @media (max-width: 468px) {
   .header {
     flex-direction: row;

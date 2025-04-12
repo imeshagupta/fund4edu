@@ -75,7 +75,6 @@ const AdminDashboard = () => {
               <strong>Amount:</strong> ₹{req.amount}
             </p>
 
-            {/* Student ID Image */}
             <p>
               <strong>Student ID:</strong>
             </p>
@@ -88,7 +87,6 @@ const AdminDashboard = () => {
               />
             </a>
 
-            {/* Request Proof Image */}
             <p>
               <strong>Request Proof:</strong>
             </p>

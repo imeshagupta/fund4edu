@@ -1,24 +1,20 @@
 .aboutContainer {
   width: 100%;
-  min-height: 80vh; /* Covers full viewport height */
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centers content vertically */
+  justify-content: center;
   align-items: center;
   text-align: center;
   padding: 50px 20px;
-  background: linear-gradient(
-    135deg,
-    #0a0a0a,
-    #1a1a1a
-  ); /* Dark, modern gradient */
+  background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
   box-shadow: 0px 10px 25px rgba(255, 153, 51, 0.2);
 }
 
 .aboutContainer h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: #ff9933; /* Orange */
+  color: #ff9933;
   border-bottom: 3px solid #ff9933;
   display: inline-block;
   padding-bottom: 8px;
@@ -26,7 +22,6 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* Feature Section */
 .row {
   display: flex;
   justify-content: center;
@@ -36,9 +31,8 @@
   gap: 20px;
 }
 
-/* Individual Feature Box */
 .feature {
-  background: rgba(255, 153, 51, 0.15); /* Softer orange */
+  background: rgba(255, 153, 51, 0.15);
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0px 5px 15px rgba(255, 153, 51, 0.2);
@@ -47,7 +41,7 @@
   width: 30%;
   min-width: 280px;
   max-width: 320px;
-  height: 300px; /* Fixed height for equal-sized boxes */
+  height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -60,7 +54,6 @@
   box-shadow: 0px 8px 20px rgba(255, 153, 51, 0.3);
 }
 
-/* Feature Icon */
 .featureIcon {
   font-size: 2.5rem;
   display: flex;
@@ -70,11 +63,10 @@
   height: 70px;
   margin: 0 auto 15px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ff9933, #cc7700); /* Softer orange */
+  background: linear-gradient(135deg, #ff9933, #cc7700);
   color: #fff;
 }
 
-/* Feature Title */
 .feature h3 {
   font-size: 1.4rem;
   margin-bottom: 8px;
@@ -82,15 +74,13 @@
   font-family: "Roboto", sans-serif;
 }
 
-/* Feature Description */
 p {
   font-size: 0.95rem;
   color: #ccc;
   line-height: 1.6;
-  flex-grow: 1; /* Allows text to take available space */
+  flex-grow: 1;
 }
 
-/* Icon Link */
 .iconLink {
   display: inline-block;
   margin-top: 12px;
@@ -104,11 +94,10 @@ p {
   color: #cc7700;
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .feature {
     width: 45%;
-    height: auto; /* Allows height to adjust */
+    height: auto;
   }
 }
 

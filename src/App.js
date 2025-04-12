@@ -10,14 +10,12 @@ import SignupForm from "./components/SignupForm";
 import StudentDashboard from "./pages/StudentDashboard";
 import DonorDashboard from "./pages/DonorDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
-import Login from "./components/Login"; // make sure login component is imported
-import { AuthProvider } from "./context/AuthContext"; // 👈 import AuthProvider
+import Login from "./components/Login";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
     <AuthProvider>
-      {" "}
-      {/* 👈 wrap everything with AuthProvider */}
       <Router>
         <Header />
         <Routes>
