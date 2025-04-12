@@ -1,0 +1,130 @@
+.faqContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  width: 100%;
+  padding: 40px;
+  background: #222;
+  box-shadow: 0px 10px 30px rgba(255, 140, 0, 0.2);
+}
+
+/* FAQ Section */
+.faq {
+  width: 100%;
+  max-width: 800px;
+}
+
+.heading {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #ff8c00;
+  margin-bottom: 30px;
+  font-family: "Poppins", sans-serif;
+}
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.accordionItem {
+  background: #333;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 5px 15px rgba(255, 140, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.accordionItem:hover {
+  transform: translateY(-3px);
+}
+
+.accordionHeader {
+  background: #ff8c00;
+  color: white;
+  padding: 18px 25px;
+  font-size: 20px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.accordionHeader:hover {
+  background: #c75c00;
+}
+
+.icon {
+  font-size: 22px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.accordionBody {
+  padding: 18px 25px;
+  font-size: 18px;
+  color: #ddd;
+  background: #444;
+  border-top: 2px solid #ff8c00;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .faqContainer {
+    max-width: 100%;
+    padding: 25px;
+  }
+
+  .heading {
+    font-size: 26px;
+  }
+
+  .accordionHeader {
+    font-size: 18px;
+    padding: 15px 20px;
+  }
+
+  .accordionBody {
+    font-size: 16px;
+    padding: 15px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .faqContainer {
+    padding: 20px;
+  }
+
+  .heading {
+    font-size: 24px;
+  }
+
+  .accordionHeader {
+    font-size: 16px;
+    padding: 12px 15px;
+  }
+
+  .accordionBody {
+    font-size: 14px;
+    padding: 12px 15px;
+  }
+}

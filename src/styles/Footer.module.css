@@ -1,0 +1,102 @@
+/* ===================== Default Footer ===================== */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 20px 40px;
+  background-color: #333;
+  border-top: 2px solid #555;
+  text-align: center;
+}
+
+/* Copyright aligned left */
+.copyRight {
+  font-size: 18px;
+  font-weight: bold;
+  color: #bbb;
+  flex: 1;
+  text-align: left;
+}
+
+/* Centering logo */
+.logo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo img {
+  width: 120px;
+  display: block;
+}
+
+/* Navigation links aligned right */
+.navLinks {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.link {
+  text-decoration: none;
+  color: #ff8c00;
+  font-size: 16px;
+  transition: color 0.3s ease-in-out;
+}
+
+.link:hover {
+  color: white;
+}
+
+/* ===================== 768px SCREEN ===================== */
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .copyRight {
+    order: 3;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .logo {
+    order: 1;
+    margin-bottom: 10px;
+  }
+
+  .navLinks {
+    order: 2;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+}
+
+/* ===================== 468px SCREEN ===================== */
+@media (max-width: 468px) {
+  .footer {
+    padding: 15px;
+  }
+
+  .logo img {
+    width: 100px; /* Slightly smaller logo for better fit */
+  }
+
+  .navLinks {
+    gap: 8px;
+  }
+
+  .copyRight {
+    font-size: 16px;
+  }
+}

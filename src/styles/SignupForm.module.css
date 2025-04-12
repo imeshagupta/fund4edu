@@ -1,0 +1,121 @@
+/* Container */
+.signupContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(
+    100vh - 120px
+  ); /* Adjust depending on your header+footer height */
+  background: linear-gradient(135deg, #1a1a1a, #222);
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+/* Form Box */
+.signupBox {
+  background: rgba(236, 170, 18, 0.352);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 5px 15px rgba(255, 140, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(78, 43, 1, 0.3);
+}
+
+/* Title */
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #ff8c00;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Input Group */
+.inputGroup {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  color: #ff8c00;
+}
+
+/* Input Fields */
+.input,
+.select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(255, 140, 0, 0.3);
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  background: #fff;
+  color: #222;
+}
+
+.input:focus,
+.select:focus {
+  border-color: #ff8c00;
+  box-shadow: 0px 0px 8px rgba(255, 140, 0, 0.5);
+}
+
+/* Submit Button */
+.submitBtn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #ff8c00, #d62828);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.submitBtn:hover {
+  background: linear-gradient(135deg, #d62828, #ff8c00);
+  transform: scale(1.05);
+}
+
+/* Login Text */
+.loginText {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.link {
+  color: #ff8c00;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+  color: #d62828;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .signupContainer {
+    padding: 20px 10px;
+  }
+
+  .signupBox {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .submitBtn {
+    font-size: 14px;
+  }
+}

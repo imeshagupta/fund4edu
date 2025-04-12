@@ -1,0 +1,123 @@
+/* General Container Styling */
+.container {
+  padding: 30px 40px;
+  background: #f9f9ff;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+}
+
+/* Heading Styling */
+h2 {
+  font-size: 32px;
+  font-weight: bold;
+  color: #3b3b3b;
+  margin-bottom: 20px;
+}
+
+/* Subtitle Styling */
+.subtitle {
+  font-size: 18px;
+  color: #777;
+  margin-bottom: 30px;
+}
+
+/* Empty Message Styling */
+.emptyMessage {
+  color: #999;
+  font-size: 18px;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Grid Layout for Students */
+.studentList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 20px;
+}
+
+/* Student Card Styling */
+.studentCard {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-left: 5px solid #ff8c00; /* Orange border */
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  background-color: #ffffff;
+  text-align: left; /* Align content to the left */
+}
+
+.studentCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Student Name Styling */
+.studentCard h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: left; /* Ensure the name is aligned left */
+}
+
+/* General Student Info Styling */
+.studentCard p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #555;
+  line-height: 1.5;
+  text-align: left; /* Align text to the left */
+}
+
+/* View Document Styling */
+.viewDoc {
+  display: inline-block;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  color: #ff8c00; /* Orange link */
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+  font-size: 16px;
+}
+
+.viewDoc:hover {
+  color: #d96b00; /* Darker orange on hover */
+}
+
+/* Donate Button Styling */
+.donateBtn {
+  background-color: #ff8c00; /* Orange button */
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  display: inline-block;
+  margin-top: 15px;
+}
+
+.donateBtn:hover {
+  background-color: #d96b00; /* Darker orange on hover */
+}
+
+/* Student ID and Fund Request Image Styling */
+.fundRequestImage {
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  max-width: 120px;
+  margin-top: 10px;
+}
+
+.fundRequestImage:hover {
+  transform: scale(1.05);
+}
