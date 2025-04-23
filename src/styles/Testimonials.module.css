@@ -1,10 +1,6 @@
 .testimonials {
   padding: 60px 20px;
-  background: linear-gradient(
-    135deg,
-    #1a1a1a,
-    #333
-  ); /* Darker background for better contrast */
+  background: linear-gradient(135deg, #1a1a1a, #333);
   color: white;
   width: 100%;
 
@@ -19,7 +15,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #ff9933; /* Warm, orange color for prominence */
+  color: #ff9933;
   font-family: "Poppins", sans-serif;
 }
 
@@ -35,7 +31,7 @@
 }
 
 .testimonialCard {
-  background: rgba(255, 140, 0, 0.2); /* Softened orange background for card */
+  background: rgba(255, 140, 0, 0.2);
   padding: 30px 20px;
   border-radius: 15px;
 
@@ -45,21 +41,21 @@
   flex-direction: column;
   justify-content: space-between;
   color: white;
-  backdrop-filter: blur(10px); /* Slight blur to improve readability */
-  border: 1px solid rgba(255, 140, 0, 0.4); /* Darker border for contrast */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 140, 0, 0.4);
   animation: fadeIn 1s ease-in-out;
   transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
 }
 
 .testimonialCard:hover {
-  transform: scale(1.05); /* Slightly larger hover effect */
-  background: rgba(255, 140, 0, 0.3); /* More prominent hover effect */
+  transform: scale(1.05);
+  background: rgba(255, 140, 0, 0.3);
 }
 
 .feedback {
   font-size: 18px;
   font-style: italic;
-  color: #ddd; /* Lighter color for the text */
+  color: #ddd;
   margin-bottom: 20px;
   line-height: 1.6;
   flex-grow: 1;
@@ -68,7 +64,7 @@
 .name {
   font-size: 16px;
   font-weight: bold;
-  color: #ff8c00; /* Lighter orange for the name */
+  color: #ff8c00;
   margin-top: auto;
 }
 
@@ -89,11 +85,11 @@
   }
 
   .testimonials h2 {
-    font-size: 1.8rem; /* Adjusted size for smaller screens */
+    font-size: 1.8rem;
   }
 
   .feedback {
-    font-size: 16px; /* Adjusted for better readability on mobile */
+    font-size: 16px;
   }
 
   .name {

@@ -3,27 +3,18 @@
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 120px);
-  background: linear-gradient(
-    135deg,
-    #1a1a1a,
-    #222
-  ); /* Dark gradient background */
+  background: linear-gradient(135deg, #1a1a1a, #222);
   padding: 40px 20px;
   box-sizing: border-box;
 }
 .message {
   margin: 10px 0;
-  color: #4caf50; /* or red for errors */
+  color: #4caf50;
   font-weight: bold;
 }
 
 .signupBox {
-  background: rgba(
-    149,
-    91,
-    20,
-    0.728
-  ); /* Light orange background with some transparency */
+  background: rgba(149, 91, 20, 0.728);
   padding: 25px;
   border-radius: 12px;
 
@@ -38,7 +29,7 @@
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #ff8c00; /* Orange for title */
+  color: #ff8c00;
   font-family: "Poppins", sans-serif;
 }
 
@@ -52,24 +43,24 @@
   font-weight: bold;
   margin-bottom: 5px;
   display: block;
-  color: #ff8c00; /* Orange for labels */
+  color: #ff8c00;
 }
 
 .input,
 .select {
   width: 100%;
   padding: 10px;
-  border: 1px solid rgba(255, 140, 0, 0.3); /* Light orange border */
+  border: 1px solid rgba(255, 140, 0, 0.3);
   border-radius: 5px;
   font-size: 16px;
   outline: none;
   background: #fff;
-  color: #222; /* Dark gray text for contrast */
+  color: #222;
 }
 
 .input:focus,
 .select:focus {
-  border-color: #ff8c00; /* Orange focus state */
+  border-color: #ff8c00;
   box-shadow: 0px 0px 8px rgba(255, 140, 0, 0.5);
 }
 
@@ -78,11 +69,7 @@
   padding: 12px;
   border: none;
   border-radius: 5px;
-  background: linear-gradient(
-    135deg,
-    #ff8c00,
-    #d62828
-  ); /* Orange to red gradient */
+  background: linear-gradient(135deg, #ff8c00, #d62828);
   color: white;
   font-size: 16px;
   cursor: pointer;
@@ -90,28 +77,24 @@
 }
 
 .submitBtn:hover {
-  background: linear-gradient(
-    135deg,
-    #d62828,
-    #ff8c00
-  ); /* Reverse gradient on hover */
-  transform: scale(1.05); /* Slightly enlarge button on hover */
+  background: linear-gradient(135deg, #d62828, #ff8c00);
+  transform: scale(1.05);
 }
 
 .loginText {
   margin-top: 10px;
   font-size: 14px;
-  color: #ddd; /* Light gray text for login instruction */
+  color: #ddd;
 }
 
 .link {
-  color: #ff8c00; /* Matching orange color for the link */
+  color: #ff8c00;
   text-decoration: none;
 }
 
 .link:hover {
   text-decoration: underline;
-  color: #d62828; /* Change to red on hover */
+  color: #d62828;
 }
 
 @media (max-width: 480px) {

@@ -1,11 +1,9 @@
-@keyframes fadeInUp {
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(30px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -31,8 +29,7 @@
   text-align: center;
   padding: 50px 20px;
   background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
-
-  animation: fadeInUp 0.8s ease forwards;
+  animation: fadeIn 0.5s ease forwards;
   position: relative;
 }
 
@@ -78,7 +75,7 @@
 .row {
   display: flex;
   justify-content: center;
-  align-items: stretch; /* Ensures all feature boxes are the same height */
+  align-items: stretch;
   flex-wrap: wrap;
   width: 100%;
   gap: 20px;
@@ -101,14 +98,14 @@
   border-left: 5px solid #ffc387;
   backdrop-filter: blur(8px);
   overflow: hidden;
-  height: 100%; /* Ensures equal height for all feature boxes */
+  height: 100%;
 }
 
 .feature .featureIcon,
 .feature h3,
 .feature p,
 .feature .iconLink {
-  flex-grow: 1; /* Ensure content stretches equally */
+  flex-grow: 1;
 }
 
 .feature:hover {
@@ -212,7 +209,7 @@
 @media (max-width: 1024px) {
   .feature {
     width: 45%;
-    min-height: 250px; /* Adjust min-height for medium screens */
+    min-height: 250px;
   }
 }
 
@@ -232,7 +229,7 @@
 
   .feature {
     width: 90%;
-    min-height: 200px; /* Adjust min-height for smaller screens */
+    min-height: 200px;
   }
 
   .footerText {
@@ -254,7 +251,7 @@
   .feature {
     width: 100%;
     margin-bottom: 20px;
-    min-height: 180px; /* Adjust min-height for mobile screens */
+    min-height: 180px;
   }
 
   .featureIcon {

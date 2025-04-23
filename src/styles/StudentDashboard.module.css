@@ -1,6 +1,6 @@
 .dashboardPage {
   background-color: black;
-  min-height: 100vh; /* Ensure the entire height is covered */
+  min-height: 100vh;
   padding: 20px;
 }
 .container {
@@ -14,12 +14,12 @@
 }
 
 .container:hover {
-  transform: translateY(-5px); /* Slight hover effect for depth */
+  transform: translateY(-5px);
 }
 
 h2 {
   text-align: center;
-  color: #ff8c00; /* Fund4Edu's theme color for heading */
+  color: #ff8c00;
   margin-bottom: 20px;
   font-family: "Poppins", sans-serif;
   font-weight: 700;
@@ -42,7 +42,7 @@ p {
 
 label {
   font-weight: 600;
-  color: #ff8c00; /* Orange label color */
+  color: #ff8c00;
   margin-bottom: 8px;
 }
 
@@ -53,7 +53,7 @@ textarea {
   border-radius: 8px;
   border: 1px solid rgba(255, 140, 0, 0.4);
   font-size: 16px;
-  background-color: #fafafa; /* Soft background for input fields */
+  background-color: #fafafa;
   color: #333;
   transition: border 0.3s ease;
 }
@@ -62,7 +62,7 @@ input[type="file"]:focus,
 input[type="number"]:focus,
 textarea:focus {
   border-color: #ff8c00;
-  box-shadow: 0px 0px 10px rgba(255, 140, 0, 0.5); /* Subtle glow effect on focus */
+  box-shadow: 0px 0px 10px rgba(255, 140, 0, 0.5);
 }
 
 textarea {
@@ -73,31 +73,23 @@ textarea {
 .submitBtn {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(
-    to right,
-    #ff8c00,
-    #d62828
-  ); /* Rich gradient for button */
+  background: linear-gradient(to right, #ff8c00, #d62828);
   color: white;
   font-size: 18px;
   font-weight: bold;
   border: none;
-  border-radius: 12px; /* Rounded button corners */
+  border-radius: 12px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .submitBtn:hover {
-  background: linear-gradient(
-    to right,
-    #d62828,
-    #ff8c00
-  ); /* Reversed gradient on hover */
+  background: linear-gradient(to right, #d62828, #ff8c00);
   transform: scale(1.05);
 }
 
 .submitBtn:active {
-  transform: scale(1); /* Button returns to normal when clicked */
+  transform: scale(1);
 }
 
 @media (max-width: 500px) {

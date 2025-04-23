@@ -5,17 +5,17 @@
   flex-wrap: wrap;
   padding: 20px 40px;
   background-color: #242323;
-  border-top: 2px solid #555; /* Ensure no shadow from border */
+  border-top: 2px solid #555;
   text-align: center;
-  flex-direction: column; /* Adjusting for small screen */
-  box-shadow: none; /* Explicitly removing any shadow effect */
+  flex-direction: column;
+  box-shadow: none;
 }
 
 .copyRight {
   font-size: 18px;
   font-weight: bold;
   color: #bbb;
-  margin-top: 10px; /* Space between logo and copyright */
+  margin-top: 10px;
 }
 
 .logoContainer {
@@ -31,16 +31,16 @@
 
 @media (max-width: 768px) {
   .footer {
-    flex-direction: column; /* Stacked vertically on smaller screens */
+    flex-direction: column;
   }
 
   .copyRight {
-    order: 2; /* Move copyright below the logo */
+    order: 2;
     margin-top: 10px;
   }
 
   .logoContainer {
-    order: 1; /* Logo on top */
+    order: 1;
     margin-bottom: 10px;
   }
 }

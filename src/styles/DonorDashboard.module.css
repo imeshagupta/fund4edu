@@ -95,9 +95,9 @@ h2 {
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.3s ease;
-  max-width: 120px; /* Set a specific max width */
-  max-height: 150px; /* Set a specific max height */
-  object-fit: cover; /* Ensure the image covers the area without distortion */
+  max-width: 120px;
+  max-height: 150px;
+  object-fit: cover;
   height: auto;
 }
 
@@ -122,8 +122,6 @@ h2 {
 .donateBtn:hover {
   background-color: #d96b00;
 }
-
-/* --------- RESPONSIVENESS --------- */
 
 @media (max-width: 768px) {
   .cardContent {

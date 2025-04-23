@@ -209,7 +209,6 @@ const StudentDashboard = () => {
               </>
             )}
 
-            {/* Only show status after submission */}
             {submitted && (
               <p>
                 <strong>Status:</strong>{" "}

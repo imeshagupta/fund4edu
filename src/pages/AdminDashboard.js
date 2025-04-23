@@ -12,6 +12,9 @@ import styles from "../styles/AdminDashboard.module.css";
 
 const AdminDashboard = () => {
   const [pendingRequests, setPendingRequests] = useState([]);
+  const [activeRejectId, setActiveRejectId] = useState(null);
+  const [reasonInputs, setReasonInputs] = useState({});
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,10 +53,25 @@ const AdminDashboard = () => {
     fetchRequests();
   }, []);
 
+  const handleRejectReasonChange = (id, value) => {
+    setReasonInputs((prev) => ({ ...prev, [id]: value }));
+  };
+
   const updateStatus = async (id, status) => {
+    const reason = reasonInputs[id] || "";
     try {
-      await updateDoc(doc(db, "users", id), { status });
+      const updateData = { status };
+      if (status === "Rejected" && reason.trim() !== "") {
+        updateData.rejectionReason = reason.trim();
+      }
+      await updateDoc(doc(db, "users", id), updateData);
       setPendingRequests((prev) => prev.filter((req) => req.id !== id));
+      setActiveRejectId(null);
+      setReasonInputs((prev) => {
+        const newInputs = { ...prev };
+        delete newInputs[id];
+        return newInputs;
+      });
       alert(`${status} request successfully!`);
     } catch (error) {
       console.error("Error updating status:", error);
@@ -86,6 +104,7 @@ const AdminDashboard = () => {
                     <strong>Amount:</strong> ₹{req.amount}
                   </p>
                 </div>
+
                 <div className={styles.cardRight}>
                   <div>
                     <p>
@@ -120,13 +139,43 @@ const AdminDashboard = () => {
                     </a>
                   </div>
                 </div>
+
                 <div className={styles.actions}>
                   <button onClick={() => updateStatus(req.id, "Approved")}>
                     Approve
                   </button>
-                  <button onClick={() => updateStatus(req.id, "Rejected")}>
-                    Reject
-                  </button>
+
+                  {activeRejectId === req.id ? (
+                    <div className={styles.rejectBox}>
+                      <textarea
+                        placeholder="Enter reason for rejection"
+                        value={reasonInputs[req.id] || ""}
+                        onChange={(e) =>
+                          setReasonInputs((prev) => ({
+                            ...prev,
+                            [req.id]: e.target.value,
+                          }))
+                        }
+                        className={styles.textarea}
+                      />
+                      <button
+                        className={styles.confirmRejectBtn}
+                        onClick={() => updateStatus(req.id, "Rejected")}
+                      >
+                        Confirm Reject
+                      </button>
+                      <button
+                        className={styles.cancelBtn}
+                        onClick={() => setActiveRejectId(null)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button onClick={() => setActiveRejectId(req.id)}>
+                      Reject
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

@@ -103,7 +103,6 @@ button:hover {
   background-color: #e77c00;
 }
 
-/* Responsive Layout */
 @media (min-width: 768px) {
   .card {
     flex-direction: row;
@@ -124,4 +123,37 @@ button:hover {
   .image {
     width: 120px;
   }
+}
+.rejectBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.textarea {
+  min-height: 60px;
+  resize: vertical;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.confirmRejectBtn {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cancelBtn {
+  background-color: #ccc;
+  color: black;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }

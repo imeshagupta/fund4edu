@@ -3,15 +3,15 @@
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 150px);
-  background-color: #222; /* Dark gray/black background to match the theme */
+  background-color: #222;
   padding: 1rem;
 }
 
 .loginBox {
-  background: #fff; /* White background for contrast */
+  background: #fff;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(255, 140, 0, 0.2); /* Soft orange shadow for depth */
+  box-shadow: 0 4px 20px rgba(255, 140, 0, 0.2);
   width: 100%;
   max-width: 400px;
   text-align: center;
@@ -22,7 +22,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  color: #ff8c00; /* Orange color for the title */
+  color: #ff8c00;
 }
 
 .inputGroup {
@@ -35,7 +35,7 @@
   font-size: 0.95rem;
   font-weight: 500;
   margin-bottom: 0.4rem;
-  color: #444; /* Dark gray for the label */
+  color: #444;
 }
 
 .input {
@@ -48,14 +48,14 @@
 }
 
 .input:focus {
-  border-color: #ff8c00; /* Orange color on focus for input fields */
+  border-color: #ff8c00;
   outline: none;
 }
 
 .submitBtn {
   width: 100%;
   padding: 0.75rem;
-  background-color: #ff8c00; /* Orange background for the button */
+  background-color: #ff8c00;
   color: white;
   border: none;
   border-radius: 6px;
@@ -66,7 +66,7 @@
 }
 
 .submitBtn:hover {
-  background-color: #cc6600; /* Darker orange on hover */
+  background-color: #cc6600;
   transform: translateY(-2px);
 }
 
@@ -77,7 +77,7 @@
 }
 
 .link {
-  color: #ff8c00; /* Matching color for links to maintain consistency */
+  color: #ff8c00;
   text-decoration: none;
   font-weight: 500;
 }
