@@ -1,25 +1,31 @@
 .testimonials {
   padding: 60px 20px;
-  background: linear-gradient(135deg, #1a1a1a, #222);
+  background: linear-gradient(
+    135deg,
+    #1a1a1a,
+    #333
+  ); /* Darker background for better contrast */
   color: white;
   width: 100%;
-  box-shadow: 0px 10px 25px rgba(255, 140, 0, 0.2);
+
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .testimonials h2 {
-  font-size: 2rem;
-  margin-bottom: 35px;
+  font-size: 2.2rem;
+  margin-bottom: 40px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #ff9933;
+  color: #ff9933; /* Warm, orange color for prominence */
   font-family: "Poppins", sans-serif;
 }
 
 .testimonialGrid {
   display: grid;
-  gap: 25px;
+  gap: 30px;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   justify-items: center;
   align-items: stretch;
@@ -29,31 +35,31 @@
 }
 
 .testimonialCard {
-  background: rgba(255, 140, 0, 0.15);
+  background: rgba(255, 140, 0, 0.2); /* Softened orange background for card */
   padding: 30px 20px;
   border-radius: 15px;
-  box-shadow: 0px 5px 15px rgba(255, 140, 0, 0.2);
+
   width: 100%;
   min-height: 280px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   color: white;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 140, 0, 0.3);
+  backdrop-filter: blur(10px); /* Slight blur to improve readability */
+  border: 1px solid rgba(255, 140, 0, 0.4); /* Darker border for contrast */
   animation: fadeIn 1s ease-in-out;
   transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
 }
 
 .testimonialCard:hover {
-  transform: scale(1.03);
-  background: rgba(255, 140, 0, 0.25);
+  transform: scale(1.05); /* Slightly larger hover effect */
+  background: rgba(255, 140, 0, 0.3); /* More prominent hover effect */
 }
 
 .feedback {
   font-size: 18px;
   font-style: italic;
-  color: #ddd;
+  color: #ddd; /* Lighter color for the text */
   margin-bottom: 20px;
   line-height: 1.6;
   flex-grow: 1;
@@ -62,7 +68,7 @@
 .name {
   font-size: 16px;
   font-weight: bold;
-  color: #ff8c00;
+  color: #ff8c00; /* Lighter orange for the name */
   margin-top: auto;
 }
 
@@ -83,11 +89,11 @@
   }
 
   .testimonials h2 {
-    font-size: 26px;
+    font-size: 1.8rem; /* Adjusted size for smaller screens */
   }
 
   .feedback {
-    font-size: 16px;
+    font-size: 16px; /* Adjusted for better readability on mobile */
   }
 
   .name {

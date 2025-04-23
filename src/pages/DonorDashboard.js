@@ -42,49 +42,45 @@ const DonorDashboard = () => {
           {students.map((student) => (
             <div key={student.id} className={styles.studentCard}>
               <h3>{student.fullName || "Unnamed Student"}</h3>
-              <p>
-                <strong>University:</strong> {student.university || "N/A"}
-              </p>
-              <p>
-                <strong>Reason:</strong> {student.reason}
-              </p>
-              <p>
-                <strong>Required:</strong> ₹{student.amount}
-              </p>
-
-              <p>
-                <strong>Student ID:</strong>
-              </p>
-              <a
-                href={student.studentId}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={student.studentId}
-                  alt="Student ID"
-                  width="120"
-                  style={{ borderRadius: "6px", cursor: "pointer" }}
-                />
-              </a>
-
-              <p>
-                <strong>Fund Request Proof:</strong>
-              </p>
-              <a
-                href={student.fundRequest}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  className={styles.fundRequestImage}
-                  src={student.fundRequest}
-                  alt="Fund Request"
-                  width="120"
-                  style={{ borderRadius: "6px", cursor: "pointer" }}
-                />
-              </a>
-              <br />
+              <div className={styles.cardContent}>
+                <div className={styles.leftDetails}>
+                  <p>
+                    <strong>University:</strong> {student.university || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Reason:</strong> {student.reason}
+                  </p>
+                  <p>
+                    <strong>Required:</strong> ₹{student.amount}
+                  </p>
+                </div>
+                <div className={styles.rightImages}>
+                  <div>
+                    <p>
+                      <strong>Student ID:</strong>
+                    </p>
+                    <a
+                      href={student.studentId}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img src={student.studentId} alt="Student ID" />
+                    </a>
+                  </div>
+                  <div>
+                    <p>
+                      <strong>Proof:</strong>
+                    </p>
+                    <a
+                      href={student.fundRequest}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img src={student.fundRequest} alt="Fund Proof" />
+                    </a>
+                  </div>
+                </div>
+              </div>
               <button className={styles.donateBtn}>Donate Now</button>
             </div>
           ))}

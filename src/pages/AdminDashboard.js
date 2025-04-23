@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../services/Firebase";
-import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { onSnapshot } from "firebase/firestore";
 import styles from "../styles/AdminDashboard.module.css";
 
 const AdminDashboard = () => {
@@ -11,7 +16,6 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const currentUser = auth.currentUser;
-
     if (!currentUser) {
       navigate("/");
       return;
@@ -58,65 +62,78 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h2>Admin Dashboard</h2>
-      {pendingRequests.length === 0 ? (
-        <p>No pending requests</p>
-      ) : (
-        pendingRequests.map((req) => (
-          <div key={req.id} className={styles.card}>
-            <p>
-              <strong>Email:</strong> {req.email}
-            </p>
-            <p>
-              <strong>Reason:</strong> {req.reason}
-            </p>
-            <p>
-              <strong>Amount:</strong> ₹{req.amount}
-            </p>
+    <>
+      <div className={styles.header}>
+        <h2>Admin Dashboard</h2>
+        <h3>Pending Requests</h3>
+      </div>
 
-            <p>
-              <strong>Student ID:</strong>
-            </p>
-            <a href={req.studentId} target="_blank" rel="noopener noreferrer">
-              <img
-                src={req.studentId}
-                alt="Student ID"
-                width="120"
-                style={{ borderRadius: "6px", cursor: "pointer" }}
-              />
-            </a>
-
-            <p>
-              <strong>Request Proof:</strong>
-            </p>
-            <a href={req.fundRequest} target="_blank" rel="noopener noreferrer">
-              <img
-                src={req.fundRequest}
-                alt="Request Proof"
-                width="120"
-                style={{ borderRadius: "6px", cursor: "pointer" }}
-              />
-            </a>
-
-            <div className={styles.actions}>
-              <button
-                className={styles.approveButton}
-                onClick={() => updateStatus(req.id, "Approved")}
-              >
-                Approve
-              </button>
-              <button
-                className={styles.rejectButton}
-                onClick={() => updateStatus(req.id, "Rejected")}
-              >
-                Reject
-              </button>
-            </div>
+      <div className={styles.container}>
+        {pendingRequests.length === 0 ? (
+          <p className={styles.noRequest}>No pending requests</p>
+        ) : (
+          <div className={styles.grid}>
+            {pendingRequests.map((req) => (
+              <div key={req.id} className={styles.card}>
+                <div className={styles.cardLeft}>
+                  <p>
+                    <strong>Email:</strong> {req.email}
+                  </p>
+                  <p>
+                    <strong>Reason:</strong> {req.reason}
+                  </p>
+                  <p>
+                    <strong>Amount:</strong> ₹{req.amount}
+                  </p>
+                </div>
+                <div className={styles.cardRight}>
+                  <div>
+                    <p>
+                      <strong>Student ID:</strong>
+                    </p>
+                    <a
+                      href={req.studentId}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={req.studentId}
+                        alt="Student ID"
+                        className={styles.image}
+                      />
+                    </a>
+                  </div>
+                  <div>
+                    <p>
+                      <strong>Request Proof:</strong>
+                    </p>
+                    <a
+                      href={req.fundRequest}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={req.fundRequest}
+                        alt="Request Proof"
+                        className={styles.image}
+                      />
+                    </a>
+                  </div>
+                </div>
+                <div className={styles.actions}>
+                  <button onClick={() => updateStatus(req.id, "Approved")}>
+                    Approve
+                  </button>
+                  <button onClick={() => updateStatus(req.id, "Rejected")}>
+                    Reject
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        ))
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 

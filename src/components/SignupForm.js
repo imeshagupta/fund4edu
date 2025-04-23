@@ -13,11 +13,13 @@ const SignupForm = () => {
   const [university, setUniversity] = useState("");
   const [organization, setOrganization] = useState("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setMessage(""); // Clear previous messages
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -26,7 +28,6 @@ const SignupForm = () => {
       );
       const user = userCredential.user;
 
-      // Store user data in Firestore
       await setDoc(doc(db, "users", user.uid), {
         fullName,
         email,
@@ -35,10 +36,14 @@ const SignupForm = () => {
         organization: role === "donor" ? organization : "",
       });
 
-      alert("Signup Successful! Redirecting...");
-      navigate(role === "student" ? "/student-dashboard" : "/donor-dashboard");
+      setMessage("Signup successful! Redirecting...");
+      setTimeout(() => {
+        navigate(
+          role === "student" ? "/student-dashboard" : "/donor-dashboard"
+        );
+      }, 1500);
     } catch (error) {
-      alert(error.message);
+      setMessage(error.message);
     }
     setLoading(false);
   };
@@ -47,6 +52,7 @@ const SignupForm = () => {
     <div className={styles.signupContainer}>
       <div className={styles.signupBox}>
         <h2 className={styles.title}>Join Fund4Edu</h2>
+        {message && <p className={styles.message}>{message}</p>}
         <form className={styles.form} onSubmit={handleSignup}>
           <div className={styles.inputGroup}>
             <label className={styles.label}>Full Name</label>

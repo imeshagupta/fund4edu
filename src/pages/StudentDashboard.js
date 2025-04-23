@@ -117,115 +117,120 @@ const StudentDashboard = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h2>{isAdmin ? "Admin Dashboard" : "Student Dashboard"}</h2>
-      {isAdmin ? (
-        <div>
-          <h3>Pending Requests</h3>
-          {pendingRequests.length === 0 ? (
-            <p>No pending requests</p>
-          ) : (
-            pendingRequests.map((req) => (
-              <div key={req.id} className={styles.card}>
-                <p>
-                  <strong>Email:</strong> {req.email}
-                </p>
-                <p>
-                  <strong>Reason:</strong> {req.reason}
-                </p>
-                <p>
-                  <strong>Amount:</strong> ₹{req.amount}
-                </p>
-                <a
-                  href={req.studentId}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View ID
-                </a>{" "}
-                <br />
-                <a
-                  href={req.fundRequest}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Request
-                </a>
-                <div className={styles.actions}>
-                  <button onClick={() => updateStatus(req.id, "Approved")}>
-                    Approve
-                  </button>
-                  <button onClick={() => updateStatus(req.id, "Rejected")}>
-                    Reject
-                  </button>
+    <div className={styles.dashboardPage}>
+      <div className={styles.container}>
+        <h2>{isAdmin ? "Admin Dashboard" : "Student Dashboard"}</h2>
+        {isAdmin ? (
+          <div>
+            <h3>Pending Requests</h3>
+            {pendingRequests.length === 0 ? (
+              <p>No pending requests</p>
+            ) : (
+              pendingRequests.map((req) => (
+                <div key={req.id} className={styles.card}>
+                  <p>
+                    <strong>Email:</strong> {req.email}
+                  </p>
+                  <p>
+                    <strong>Reason:</strong> {req.reason}
+                  </p>
+                  <p>
+                    <strong>Amount:</strong> ₹{req.amount}
+                  </p>
+                  <a
+                    href={req.studentId}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View ID
+                  </a>{" "}
+                  <br />
+                  <a
+                    href={req.fundRequest}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    View Request
+                  </a>
+                  <div className={styles.actions}>
+                    <button onClick={() => updateStatus(req.id, "Approved")}>
+                      Approve
+                    </button>
+                    <button onClick={() => updateStatus(req.id, "Rejected")}>
+                      Reject
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
-          )}
-        </div>
-      ) : (
-        <>
-          <p>
-            <strong>Status:</strong>{" "}
-            <span
-              style={{
-                color:
-                  status === "Approved"
-                    ? "green"
-                    : status === "Rejected"
-                    ? "red"
-                    : "orange",
-                fontWeight: "bold",
-              }}
-            >
-              {status}
-            </span>
-          </p>
+              ))
+            )}
+          </div>
+        ) : (
+          <>
+            {!submitted && (
+              <>
+                <div className={styles.uploadSection}>
+                  <label>Upload Student ID:</label>
+                  <input
+                    type="file"
+                    onChange={(e) => handleFileUpload(e, "studentId")}
+                  />
+                  {studentId && <p>Uploaded ✅</p>}
+                </div>
 
-          {!submitted && (
-            <>
-              <div className={styles.uploadSection}>
-                <label>Upload Student ID:</label>
-                <input
-                  type="file"
-                  onChange={(e) => handleFileUpload(e, "studentId")}
-                />
-                {studentId && <p>Uploaded ✅</p>}
-              </div>
+                <div className={styles.uploadSection}>
+                  <label>Upload College Approved Fund Request:</label>
+                  <input
+                    type="file"
+                    onChange={(e) => handleFileUpload(e, "fundRequest")}
+                  />
+                  {fundRequest && <p>Uploaded ✅</p>}
+                </div>
 
-              <div className={styles.uploadSection}>
-                <label>Upload College Approved Fund Request:</label>
-                <input
-                  type="file"
-                  onChange={(e) => handleFileUpload(e, "fundRequest")}
-                />
-                {fundRequest && <p>Uploaded ✅</p>}
-              </div>
+                <div className={styles.inputGroup}>
+                  <label>Reason for Request:</label>
+                  <textarea
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                  />
+                </div>
 
-              <div className={styles.inputGroup}>
-                <label>Reason for Request:</label>
-                <textarea
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                />
-              </div>
+                <div className={styles.inputGroup}>
+                  <label>Required Amount:</label>
+                  <input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                </div>
 
-              <div className={styles.inputGroup}>
-                <label>Required Amount:</label>
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              </div>
+                <button className={styles.submitBtn} onClick={handleSubmit}>
+                  Submit Request
+                </button>
+              </>
+            )}
 
-              <button className={styles.submitBtn} onClick={handleSubmit}>
-                Submit Request
-              </button>
-            </>
-          )}
-        </>
-      )}
+            {/* Only show status after submission */}
+            {submitted && (
+              <p>
+                <strong>Status:</strong>{" "}
+                <span
+                  style={{
+                    color:
+                      status === "Approved"
+                        ? "green"
+                        : status === "Rejected"
+                        ? "red"
+                        : "orange",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {status}
+                </span>
+              </p>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };

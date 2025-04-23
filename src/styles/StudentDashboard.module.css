@@ -1,85 +1,116 @@
+.dashboardPage {
+  background-color: black;
+  min-height: 100vh; /* Ensure the entire height is covered */
+  padding: 20px;
+}
 .container {
   max-width: 600px;
   margin: 40px auto;
-  padding: 25px 30px;
-  background-color: #fff;
+  padding: 30px;
+  background-color: #ffffff;
   border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-5px); /* Slight hover effect for depth */
 }
 
 h2 {
   text-align: center;
-  color: #4b0082;
-  margin-bottom: 25px;
+  color: #ff8c00; /* Fund4Edu's theme color for heading */
+  margin-bottom: 20px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 28px;
 }
 
 p {
   font-size: 16px;
   color: #444;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  line-height: 1.6;
 }
 
 .uploadSection,
 .inputGroup {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   display: flex;
   flex-direction: column;
 }
 
 label {
   font-weight: 600;
-  color: #333;
-  margin-bottom: 6px;
+  color: #ff8c00; /* Orange label color */
+  margin-bottom: 8px;
 }
 
 input[type="file"],
 input[type="number"],
 textarea {
-  padding: 10px;
+  padding: 12px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  resize: vertical;
-  background-color: #f9f9f9;
+  border: 1px solid rgba(255, 140, 0, 0.4);
+  font-size: 16px;
+  background-color: #fafafa; /* Soft background for input fields */
+  color: #333;
+  transition: border 0.3s ease;
+}
+
+input[type="file"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+  border-color: #ff8c00;
+  box-shadow: 0px 0px 10px rgba(255, 140, 0, 0.5); /* Subtle glow effect on focus */
 }
 
 textarea {
-  height: 80px;
-}
-
-input[type="file"] {
-  padding: 6px;
-  background-color: #fff;
+  min-height: 100px;
+  resize: vertical;
 }
 
 .submitBtn {
   width: 100%;
-  padding: 12px;
-  background: linear-gradient(to right, #a4508b, #5f0a87);
+  padding: 14px;
+  background: linear-gradient(
+    to right,
+    #ff8c00,
+    #d62828
+  ); /* Rich gradient for button */
   color: white;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px; /* Rounded button corners */
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .submitBtn:hover {
-  background: linear-gradient(to right, #5f0a87, #a4508b);
+  background: linear-gradient(
+    to right,
+    #d62828,
+    #ff8c00
+  ); /* Reversed gradient on hover */
+  transform: scale(1.05);
+}
+
+.submitBtn:active {
+  transform: scale(1); /* Button returns to normal when clicked */
 }
 
 @media (max-width: 500px) {
   .container {
-    padding: 20px;
+    padding: 25px;
     margin: 20px;
   }
 
   h2 {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .submitBtn {
-    font-size: 15px;
+    font-size: 16px;
   }
 }

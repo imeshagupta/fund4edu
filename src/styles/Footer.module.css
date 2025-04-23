@@ -4,21 +4,21 @@
   justify-content: center;
   flex-wrap: wrap;
   padding: 20px 40px;
-  background-color: #333;
-  border-top: 2px solid #555;
+  background-color: #242323;
+  border-top: 2px solid #555; /* Ensure no shadow from border */
   text-align: center;
+  flex-direction: column; /* Adjusting for small screen */
+  box-shadow: none; /* Explicitly removing any shadow effect */
 }
 
 .copyRight {
   font-size: 18px;
   font-weight: bold;
   color: #bbb;
-  flex: 1;
-  text-align: left;
+  margin-top: 10px; /* Space between logo and copyright */
 }
 
-.logo {
-  flex: 1;
+.logoContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,51 +29,19 @@
   display: block;
 }
 
-.navLinks {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  padding: 0;
-  margin: 0;
-  flex: 1;
-  justify-content: flex-end;
-}
-
-.link {
-  text-decoration: none;
-  color: #ff8c00;
-  font-size: 16px;
-  transition: color 0.3s ease-in-out;
-}
-
-.link:hover {
-  color: white;
-}
-
 @media (max-width: 768px) {
   .footer {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
+    flex-direction: column; /* Stacked vertically on smaller screens */
   }
 
   .copyRight {
-    order: 3;
-    text-align: center;
+    order: 2; /* Move copyright below the logo */
     margin-top: 10px;
   }
 
-  .logo {
-    order: 1;
+  .logoContainer {
+    order: 1; /* Logo on top */
     margin-bottom: 10px;
-  }
-
-  .navLinks {
-    order: 2;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
   }
 }
 
@@ -84,10 +52,6 @@
 
   .logo img {
     width: 100px;
-  }
-
-  .navLinks {
-    gap: 8px;
   }
 
   .copyRight {

@@ -44,7 +44,7 @@
 }
 
 .accordionHeader {
-  background: #ff8c00;
+  background: #e17f06;
   color: white;
   padding: 18px 25px;
   font-size: 20px;
@@ -69,7 +69,7 @@
   padding: 18px 25px;
   font-size: 18px;
   color: #ddd;
-  background: #444;
+  background: rgba(255, 140, 0, 0.2);
   border-top: 2px solid #ff8c00;
   animation: fadeIn 0.5s ease-in-out;
 }
