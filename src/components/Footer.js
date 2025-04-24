@@ -11,7 +11,12 @@ const Footer = () => {
           <img src={img} alt="Fund4Edu Logo" />
         </Link>
       </div>
-      <p className={styles.copyRight}>©Fund4Edu. All rights reserved.</p>
+
+      <p className={styles.email}>
+        <a href="mailto:fund4edu27@gmail.com">📧 fund4edu27@gmail.com</a>
+      </p>
+
+      <p className={styles.copyRight}>© Fund4Edu. All rights reserved.</p>
     </footer>
   );
 };

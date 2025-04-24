@@ -1,53 +1,69 @@
 .footer {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   padding: 20px 40px;
   background-color: #242323;
   border-top: 2px solid #555;
   text-align: center;
-  flex-direction: column;
   box-shadow: none;
-}
-
-.copyRight {
-  font-size: 18px;
-  font-weight: bold;
-  color: #bbb;
-  margin-top: 10px;
+  flex-direction: row;
 }
 
 .logoContainer {
+  flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
 }
 
 .logo img {
   width: 120px;
-  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
+.email {
+  flex: 1;
+  color: #fff;
+  font-size: 18px;
+  text-align: center;
+}
+
+.email a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.email a:hover {
+  text-decoration: underline;
+}
+
+.copyRight {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 500;
+  color: #bbb;
+  text-align: right;
+}
+
+/* Mobile responsiveness */
 @media (max-width: 768px) {
   .footer {
     flex-direction: column;
-  }
-
-  .copyRight {
-    order: 2;
-    margin-top: 10px;
-  }
-
-  .logoContainer {
-    order: 1;
-    margin-bottom: 10px;
-  }
-}
-
-@media (max-width: 468px) {
-  .footer {
+    align-items: center;
+    text-align: center;
     padding: 15px;
+  }
+
+  .logoContainer,
+  .email,
+  .copyRight {
+    flex: none;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    margin: 5px 0;
   }
 
   .logo img {
@@ -55,6 +71,10 @@
   }
 
   .copyRight {
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  .email {
+    font-size: 13px;
   }
 }

@@ -59,19 +59,29 @@ const AdminDashboard = () => {
 
   const updateStatus = async (id, status) => {
     const reason = reasonInputs[id] || "";
+    if (status === "Rejected" && reason.trim() === "") {
+      alert("Please provide a rejection reason before proceeding.");
+      return; // Prevent submission if reason is blank
+    }
+
     try {
       const updateData = { status };
       if (status === "Rejected" && reason.trim() !== "") {
         updateData.rejectionReason = reason.trim();
       }
       await updateDoc(doc(db, "users", id), updateData);
+
+      // Remove request from pending requests list
       setPendingRequests((prev) => prev.filter((req) => req.id !== id));
       setActiveRejectId(null);
+
+      // Clear reason input for the rejected request
       setReasonInputs((prev) => {
         const newInputs = { ...prev };
         delete newInputs[id];
         return newInputs;
       });
+
       alert(`${status} request successfully!`);
     } catch (error) {
       console.error("Error updating status:", error);
@@ -96,6 +106,12 @@ const AdminDashboard = () => {
                 <div className={styles.cardLeft}>
                   <p>
                     <strong>Email:</strong> {req.email}
+                  </p>
+                  <p>
+                    <strong>Phone:</strong> {req.phone || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Address:</strong> {req.address || "N/A"}
                   </p>
                   <p>
                     <strong>Reason:</strong> {req.reason}
@@ -151,13 +167,11 @@ const AdminDashboard = () => {
                         placeholder="Enter reason for rejection"
                         value={reasonInputs[req.id] || ""}
                         onChange={(e) =>
-                          setReasonInputs((prev) => ({
-                            ...prev,
-                            [req.id]: e.target.value,
-                          }))
+                          handleRejectReasonChange(req.id, e.target.value)
                         }
                         className={styles.textarea}
                       />
+
                       <button
                         className={styles.confirmRejectBtn}
                         onClick={() => updateStatus(req.id, "Rejected")}

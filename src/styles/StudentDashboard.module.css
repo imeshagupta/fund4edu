@@ -48,6 +48,7 @@ label {
 
 input[type="file"],
 input[type="number"],
+input[type="tel"],
 textarea {
   padding: 12px;
   border-radius: 8px;

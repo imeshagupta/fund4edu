@@ -11,6 +11,8 @@ const StudentDashboard = () => {
   const [fundRequest, setFundRequest] = useState(null);
   const [reason, setReason] = useState("");
   const [amount, setAmount] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [status, setStatus] = useState("Pending");
   const [submitted, setSubmitted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -34,8 +36,10 @@ const StudentDashboard = () => {
         setFundRequest(data.fundRequest || null);
         setReason(data.reason || "");
         setAmount(data.amount || "");
+        setPhone(data.phone || "");
+        setAddress(data.address || "");
         setStatus(data.status || "Pending");
-        setIsAdmin(data.isAdmin || false); // Check if user is admin
+        setIsAdmin(data.isAdmin || false);
 
         if (data.studentId && data.fundRequest && data.reason && data.amount) {
           setSubmitted(true);
@@ -46,7 +50,6 @@ const StudentDashboard = () => {
     return () => unsubscribe();
   }, [navigate]);
 
-  // If the user is admin, show requests to approve/reject
   useEffect(() => {
     if (isAdmin) {
       const fetchRequests = async () => {
@@ -77,15 +80,27 @@ const StudentDashboard = () => {
     };
     reader.readAsDataURL(file);
   };
-
   const handleSubmit = async () => {
     if (!user) {
       alert("User not logged in!");
       return;
     }
 
-    if (!studentId || !fundRequest || !reason.trim() || !amount) {
+    if (
+      !studentId ||
+      !fundRequest ||
+      !reason.trim() ||
+      !amount ||
+      !phone.trim() ||
+      !address.trim()
+    ) {
       alert("Please fill all fields.");
+      return;
+    }
+
+    const phonePattern = /^[6-9]\d{9}$/;
+    if (!phonePattern.test(phone)) {
+      alert("Please enter a valid 10-digit Indian phone number.");
       return;
     }
 
@@ -96,6 +111,8 @@ const StudentDashboard = () => {
         fundRequest,
         reason,
         amount,
+        phone,
+        address,
         status: "Pending",
       },
       { merge: true }
@@ -137,13 +154,19 @@ const StudentDashboard = () => {
                   <p>
                     <strong>Amount:</strong> ₹{req.amount}
                   </p>
+                  <p>
+                    <strong>Phone:</strong> {req.phone}
+                  </p>
+                  <p>
+                    <strong>Address:</strong> {req.address}
+                  </p>
                   <a
                     href={req.studentId}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     View ID
-                  </a>{" "}
+                  </a>
                   <br />
                   <a
                     href={req.fundRequest}
@@ -185,6 +208,35 @@ const StudentDashboard = () => {
                   />
                   {fundRequest && <p>Uploaded ✅</p>}
                 </div>
+                <div className={styles.inputGroup}>
+                  <label>Phone Number:</label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => {
+                      const input = e.target.value;
+                      if (/^\d{0,10}$/.test(input)) {
+                        setPhone(input);
+                      }
+                    }}
+                    placeholder="Enter 10-digit phone number"
+                  />
+                  {!/^[6-9]\d{9}$/.test(phone) && phone.length > 0 && (
+                    <p className={styles.errorText}>
+                      Please enter a valid 10-digit phone number starting with
+                      6-9.
+                    </p>
+                  )}
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label>Address:</label>
+                  <textarea
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder="Enter your full address"
+                  />
+                </div>
 
                 <div className={styles.inputGroup}>
                   <label>Reason for Request:</label>
@@ -203,7 +255,19 @@ const StudentDashboard = () => {
                   />
                 </div>
 
-                <button className={styles.submitBtn} onClick={handleSubmit}>
+                <button
+                  className={styles.submitBtn}
+                  onClick={handleSubmit}
+                  disabled={
+                    !studentId ||
+                    !fundRequest ||
+                    !reason.trim() ||
+                    !amount ||
+                    !phone.trim() ||
+                    !address.trim() ||
+                    !/^[6-9]\d{9}$/.test(phone)
+                  }
+                >
                   Submit Request
                 </button>
               </>
