@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../styles/Header.module.css";
 import img from "../assets/fund4edu.png";
@@ -15,6 +15,21 @@ const Header = () => {
     await logout();
     navigate("/"); // 👈 redirect to home after logout
   };
+
+  const profileRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className={styles.header}>
@@ -58,7 +73,7 @@ const Header = () => {
 
       <div className={styles.authButtons}>
         {currentUser ? (
-          <div className={styles.profileMenuWrapper}>
+          <div className={styles.profileMenuWrapper} ref={profileRef}>
             <FaUserCircle
               className={styles.profileIcon}
               onClick={() => setIsProfileOpen(!isProfileOpen)} // Toggle profile dropdown

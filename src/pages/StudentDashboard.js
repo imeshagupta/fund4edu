@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../services/Firebase";
-import { doc, onSnapshot, updateDoc, setDoc } from "firebase/firestore";
+import {
+  doc,
+  onSnapshot,
+  updateDoc,
+  setDoc,
+  collection,
+  getDocs,
+} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
 import styles from "../styles/StudentDashboard.module.css";
 
 const StudentDashboard = () => {
@@ -17,7 +23,15 @@ const StudentDashboard = () => {
   const [submitted, setSubmitted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [pendingRequests, setPendingRequests] = useState([]);
+  const [notification, setNotification] = useState({ message: "", type: "" });
+  const [rejectionReason, setRejectionReason] = useState("");
+
   const navigate = useNavigate();
+
+  const showNotification = (message, type = "info") => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification({ message: "", type: "" }), 3000);
+  };
 
   useEffect(() => {
     const currentUser = auth.currentUser;
@@ -40,6 +54,7 @@ const StudentDashboard = () => {
         setAddress(data.address || "");
         setStatus(data.status || "Pending");
         setIsAdmin(data.isAdmin || false);
+        setRejectionReason(data.rejectionReason || "");
 
         if (data.studentId && data.fundRequest && data.reason && data.amount) {
           setSubmitted(true);
@@ -63,7 +78,6 @@ const StudentDashboard = () => {
         });
         setPendingRequests(pending);
       };
-
       fetchRequests();
     }
   }, [isAdmin]);
@@ -80,9 +94,10 @@ const StudentDashboard = () => {
     };
     reader.readAsDataURL(file);
   };
+
   const handleSubmit = async () => {
     if (!user) {
-      alert("User not logged in!");
+      showNotification("User not logged in!", "error");
       return;
     }
 
@@ -94,60 +109,111 @@ const StudentDashboard = () => {
       !phone.trim() ||
       !address.trim()
     ) {
-      alert("Please fill all fields.");
+      showNotification("Please fill all fields.", "error");
       return;
     }
 
     const phonePattern = /^[6-9]\d{9}$/;
     if (!phonePattern.test(phone)) {
-      alert("Please enter a valid 10-digit Indian phone number.");
+      showNotification("Invalid 10-digit Indian phone number.", "error");
       return;
     }
 
-    await setDoc(
-      doc(db, "users", user.uid),
-      {
-        studentId,
-        fundRequest,
-        reason,
-        amount,
-        phone,
-        address,
-        status: "Pending",
-      },
-      { merge: true }
-    );
-
-    setSubmitted(true);
-    alert("Funding request submitted successfully!");
+    try {
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          studentId,
+          fundRequest,
+          reason,
+          amount,
+          phone,
+          address,
+          status: "Pending",
+          rejectionReason: "",
+        },
+        { merge: true }
+      );
+      setSubmitted(true);
+      showNotification("Funding request submitted successfully!", "success");
+    } catch (error) {
+      console.error("Error submitting request:", error);
+      showNotification("Submission failed. Please try again.", "error");
+    }
   };
 
   const updateStatus = async (id, status) => {
     try {
-      await updateDoc(doc(db, "users", id), { status });
+      if (status === "Rejected") {
+        const rejectionReason = prompt("Enter rejection reason:");
+        if (!rejectionReason || rejectionReason.trim() === "") {
+          showNotification("Rejection reason required.", "error");
+          return;
+        }
+        await updateDoc(doc(db, "users", id), {
+          status,
+          rejectionReason,
+        });
+      } else {
+        await updateDoc(doc(db, "users", id), { status });
+      }
       setPendingRequests((prev) => prev.filter((req) => req.id !== id));
-      alert(`${status} request successfully!`);
+      showNotification(`${status} successfully!`, "success");
     } catch (error) {
-      console.error("Error updating status:", error);
-      alert("Failed to update status. Please try again.");
+      console.error("Status update error:", error);
+      showNotification("Failed to update status. Try again.", "error");
+    }
+  };
+
+  const handleReSubmit = async () => {
+    if (!user) {
+      showNotification("User not logged in!", "error");
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, "users", user.uid), {
+        status: "Pending",
+        rejectionReason: "",
+      });
+      setStatus("Pending");
+      setRejectionReason("");
+      setSubmitted(false);
+      showNotification("You can now re-submit your request.", "success");
+    } catch (error) {
+      console.error("Re-submit error:", error);
+      showNotification("Failed to reset. Try again.", "error");
     }
   };
 
   return (
     <div className={styles.dashboardPage}>
+      {notification.message && (
+        <div
+          className={`${styles.notification} ${
+            styles[notification.type] || styles.info
+          }`}
+        >
+          {notification.message}
+        </div>
+      )}
+
       <div className={styles.container}>
-        <h2>{isAdmin ? "Admin Dashboard" : "Student Dashboard"}</h2>
+        <h1>{isAdmin ? "Admin Dashboard" : "Student Dashboard"}</h1>
+
         {isAdmin ? (
-          <div>
+          <>
             <h3>Pending Requests</h3>
             {pendingRequests.length === 0 ? (
               <p>No pending requests</p>
             ) : (
               pendingRequests.map((req) => (
                 <div key={req.id} className={styles.card}>
-                  <p>
-                    <strong>Email:</strong> {req.email}
-                  </p>
+                  {req.email && (
+                    <p>
+                      <strong>Email:</strong> {req.email}
+                    </p>
+                  )}
                   <p>
                     <strong>Reason:</strong> {req.reason}
                   </p>
@@ -186,13 +252,13 @@ const StudentDashboard = () => {
                 </div>
               ))
             )}
-          </div>
+          </>
         ) : (
           <>
             {!submitted && (
               <>
                 <div className={styles.uploadSection}>
-                  <label>Upload Student ID:</label>
+                  <label>Upload Student ID (Max 400 KB):</label>
                   <input
                     type="file"
                     onChange={(e) => handleFileUpload(e, "studentId")}
@@ -201,45 +267,37 @@ const StudentDashboard = () => {
                 </div>
 
                 <div className={styles.uploadSection}>
-                  <label>Upload College Approved Fund Request:</label>
+                  <label>Upload Fund Request (Max 400 KB):</label>
                   <input
                     type="file"
                     onChange={(e) => handleFileUpload(e, "fundRequest")}
                   />
                   {fundRequest && <p>Uploaded ✅</p>}
                 </div>
+
                 <div className={styles.inputGroup}>
-                  <label>Phone Number:</label>
+                  <label>Phone:</label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => {
                       const input = e.target.value;
-                      if (/^\d{0,10}$/.test(input)) {
-                        setPhone(input);
-                      }
+                      if (/^\d{0,10}$/.test(input)) setPhone(input);
                     }}
-                    placeholder="Enter 10-digit phone number"
+                    placeholder="10-digit phone"
                   />
-                  {!/^[6-9]\d{9}$/.test(phone) && phone.length > 0 && (
-                    <p className={styles.errorText}>
-                      Please enter a valid 10-digit phone number starting with
-                      6-9.
-                    </p>
-                  )}
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label>Address:</label>
+                  <label>Address (max 250):</label>
                   <textarea
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Enter your full address"
                   />
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label>Reason for Request:</label>
+                  <label>Reason (max 500):</label>
                   <textarea
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
@@ -247,7 +305,7 @@ const StudentDashboard = () => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                  <label>Required Amount:</label>
+                  <label>Required Amount (max ₹10L):</label>
                   <input
                     type="number"
                     value={amount}
@@ -274,22 +332,34 @@ const StudentDashboard = () => {
             )}
 
             {submitted && (
-              <p>
-                <strong>Status:</strong>{" "}
-                <span
-                  style={{
-                    color:
-                      status === "Approved"
-                        ? "green"
-                        : status === "Rejected"
-                        ? "red"
-                        : "orange",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {status}
-                </span>
-              </p>
+              <>
+                <p>
+                  <strong>Status:</strong>{" "}
+                  <span
+                    style={{
+                      color:
+                        status === "Approved"
+                          ? "green"
+                          : status === "Rejected"
+                          ? "red"
+                          : "orange",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {status}
+                  </span>
+                </p>
+                {status === "Rejected" && rejectionReason && (
+                  <p>
+                    <strong>Reason for Rejection:</strong> {rejectionReason}
+                  </p>
+                )}
+                {status === "Rejected" && (
+                  <button onClick={handleReSubmit} className={styles.submitBtn}>
+                    Re-submit Request
+                  </button>
+                )}
+              </>
             )}
           </>
         )}

@@ -17,9 +17,9 @@
   transform: translateY(-5px);
 }
 
-h2 {
+.container h1 {
   text-align: center;
-  color: #ff8c00;
+  color: #6e420b;
   margin-bottom: 20px;
   font-family: "Poppins", sans-serif;
   font-weight: 700;
