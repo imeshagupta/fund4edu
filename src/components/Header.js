@@ -2,18 +2,18 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../styles/Header.module.css";
 import img from "../assets/fund4edu.png";
-import { useAuth } from "../context/AuthContext"; // 👈 import context
+import { useAuth } from "../context/AuthContext";
 import { FaUserCircle } from "react-icons/fa";
 
 const Header = () => {
-  const [isNavOpen, setIsNavOpen] = useState(false); // For navigation menu
-  const [isProfileOpen, setIsProfileOpen] = useState(false); // For profile dropdown
-  const { currentUser, logout, userData } = useAuth(); // 👈 get current user and logout function
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { currentUser, logout, userData } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
-    navigate("/"); // 👈 redirect to home after logout
+    navigate("/");
   };
 
   const profileRef = useRef();
@@ -76,7 +76,7 @@ const Header = () => {
           <div className={styles.profileMenuWrapper} ref={profileRef}>
             <FaUserCircle
               className={styles.profileIcon}
-              onClick={() => setIsProfileOpen(!isProfileOpen)} // Toggle profile dropdown
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
             />
             {isProfileOpen && (
               <div className={styles.dropdown}>

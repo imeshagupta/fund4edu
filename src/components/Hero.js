@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "../styles/Hero.module.css";
-import heroImage from "../assets/education-fund-6303217.webp"; // Ensure the path is correct
+import heroImage from "../assets/education-fund-6303217.webp";
 
 const Hero = () => {
   return (

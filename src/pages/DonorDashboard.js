@@ -48,12 +48,19 @@ const DonorDashboard = () => {
                     <strong>University:</strong> {student.university || "N/A"}
                   </p>
                   <p>
+                    <strong>Contact No:</strong> {student.phone || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Address:</strong> {student.address || "N/A"}
+                  </p>
+                  <p>
                     <strong>Reason:</strong> {student.reason}
                   </p>
                   <p>
-                    <strong>Required:</strong> ₹{student.amount}
+                    <strong>Required Amount:</strong> ₹{student.amount}
                   </p>
                 </div>
+
                 <div className={styles.rightImages}>
                   <div>
                     <p>

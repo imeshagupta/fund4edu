@@ -19,7 +19,7 @@ const SignupForm = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage(""); // Clear previous messages
+    setMessage("");
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,

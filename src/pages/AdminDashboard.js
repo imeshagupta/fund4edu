@@ -69,32 +69,13 @@ const AdminDashboard = () => {
     setReasonInputs((prev) => ({ ...prev, [id]: value }));
   };
 
-  const updateStatus = async (id, status) => {
-    const reason = reasonInputs[id] || "";
-    if (status === "Rejected" && reason.trim() === "") {
-      showNotification(
-        "Please provide a rejection reason before proceeding.",
-        "warning"
-      );
-      return;
-    }
-
+  const updateStatus = async (id, status, rejectionReason = "") => {
     try {
-      const updateData = { status };
-      if (status === "Rejected" && reason.trim() !== "") {
-        updateData.rejectionReason = reason.trim(); // Add rejection reason to Firestore
-      }
-      await updateDoc(doc(db, "users", id), updateData);
-
-      setPendingRequests((prev) => prev.filter((req) => req.id !== id));
-      setActiveRejectId(null);
-
-      setReasonInputs((prev) => {
-        const newInputs = { ...prev };
-        delete newInputs[id];
-        return newInputs;
+      await updateDoc(doc(db, "users", id), {
+        status,
+        rejectionReason: status === "Rejected" ? rejectionReason : "",
       });
-
+      setPendingRequests((prev) => prev.filter((req) => req.id !== id));
       showNotification(`${status} request successfully!`, "success");
     } catch (error) {
       console.error("Error updating status:", error);
