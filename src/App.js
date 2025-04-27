@@ -9,10 +9,10 @@ import Faqs from "./components/Faqs";
 import SignupForm from "./components/SignupForm";
 import StudentDashboard from "./pages/StudentDashboard";
 import DonorDashboard from "./pages/DonorDashboard";
-// import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import Login from "./components/Login";
 import { AuthProvider } from "./context/AuthContext";
-
+import AdminRoute from "./components/AdminRoute";
 function App() {
   return (
     <AuthProvider>
@@ -25,7 +25,14 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/faqs" element={<Faqs />} />
-          {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
+          <Route
+            path="/admin-dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
           <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/donor-dashboard" element={<DonorDashboard />} />
         </Routes>

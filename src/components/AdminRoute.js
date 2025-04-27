@@ -1,34 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { auth, db } from "../services/Firebase";
-import { doc, getDoc } from "firebase/firestore";
+import React from "react";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Use the context you already made
 
 const AdminRoute = ({ children }) => {
-  const [isAdmin, setIsAdmin] = useState(null);
+  const { currentUser, userData, loading } = useAuth();
 
-  useEffect(() => {
-    const checkAdmin = async () => {
-      const user = auth.currentUser;
-      if (!user) {
-        setIsAdmin(false);
-        return;
-      }
+  if (loading) return <p>Loading...</p>;
 
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists() && docSnap.data().isAdmin) {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-      }
-    };
+  if (!currentUser || !userData || !userData.isAdmin) {
+    return <Navigate to="/" />;
+  }
 
-    checkAdmin();
-  }, []);
-
-  if (isAdmin === null) return <p>Loading...</p>;
-
-  return isAdmin ? children : <Navigate to="/" />;
+  return children;
 };
 
 export default AdminRoute;

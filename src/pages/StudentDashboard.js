@@ -148,9 +148,12 @@ const StudentDashboard = () => {
     }
   };
 
-  const updateStatus = async (id, status) => {
+  const updateStatus = async (id, status, rejectionReason = "") => {
     try {
-      await updateDoc(doc(db, "users", id), { status });
+      await updateDoc(doc(db, "users", id), {
+        status,
+        rejectionReason: status === "Rejected" ? rejectionReason : "", // Only set rejectionReason if rejected
+      });
       setPendingRequests((prev) => prev.filter((req) => req.id !== id));
       showNotification(`${status} request successfully!`, "success");
     } catch (error) {
@@ -178,6 +181,8 @@ const StudentDashboard = () => {
       setAmount("");
       setPhone("");
       setAddress("");
+      setStudentId(null); // Reset uploaded student ID
+      setFundRequest(null); // Reset uploaded fund request
       setSubmitted(false); // Allow new submission
       showNotification("You can now re-submit your request.", "success");
     } catch (error) {
@@ -357,9 +362,14 @@ const StudentDashboard = () => {
             )}
 
             {status === "Rejected" && (
-              <button onClick={handleReSubmit} className={styles.submitBtn}>
-                Re-submit Request
-              </button>
+              <div>
+                <p>
+                  <strong>Rejection Reason:</strong> {reason}
+                </p>
+                <button onClick={handleReSubmit} className={styles.submitBtn}>
+                  Re-submit Request
+                </button>
+              </div>
             )}
           </>
         )}
