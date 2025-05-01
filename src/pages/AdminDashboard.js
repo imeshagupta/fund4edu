@@ -11,7 +11,6 @@ const AdminDashboard = () => {
   const [pendingRequests, setPendingRequests] = useState([]);
   const [donations, setDonations] = useState([]);
   const [activeRejectId, setActiveRejectId] = useState(null);
-  const [activeDonationRejectId, setActiveDonationRejectId] = useState(null);
   const [reasonInputs, setReasonInputs] = useState({});
   const [notification, setNotification] = useState({ message: "", type: "" });
 
@@ -46,15 +45,12 @@ const AdminDashboard = () => {
       const donationsSnapshot = await getDocs(collection(db, "donations"));
       const usersSnapshot = await getDocs(collection(db, "users"));
 
+      // Create a map of user data (including fullName)
       const userMap = {};
       usersSnapshot.forEach((userDoc) => {
         const data = userDoc.data();
-
         userMap[userDoc.id] = {
-          fullName: data.fullName || data.name || "Unnamed Student",
-          accountNumber: data.accountNumber || "N/A",
-          ifscCode: data.ifscCode || "N/A",
-          upiId: data.upiId || "N/A",
+          fullName: data.fullName || "Unnamed User",
         };
       });
 
@@ -62,17 +58,13 @@ const AdminDashboard = () => {
       donationsSnapshot.forEach((docSnap) => {
         const data = docSnap.data();
         if (data.status === "paid") {
-          const userInfo = userMap[data.studentUid] || {};
-
-          console.log("Donation data for student:", data.studentUid, userInfo);
-
+          const donorData = userMap[data.donorUid] || {};
+          const studentData = userMap[data.studentUid] || {};
           pending.push({
             id: docSnap.id,
             ...data,
-            studentName: userInfo.fullName || "Unknown Student",
-            accountNumber: userInfo.accountNumber,
-            ifscCode: userInfo.ifscCode,
-            upiId: userInfo.upiId,
+            donorName: donorData.fullName,
+            studentName: studentData.fullName,
           });
         }
       });
@@ -118,16 +110,16 @@ const AdminDashboard = () => {
     }
   };
 
-  const rejectDonation = async (id) => {
-    if (!reasonInputs[id]) {
-      showNotification("Please enter a reason for rejection.", "error");
+  const rejectDonation = async (id, rejectionReason = "") => {
+    if (!rejectionReason) {
+      showNotification("Please fill in the reason for rejection.", "error");
       return;
     }
 
     try {
       await updateDoc(doc(db, "donations", id), {
         status: "rejected",
-        rejectionReason: reasonInputs[id],
+        rejectionReason,
       });
       setDonations((prev) => prev.filter((d) => d.id !== id));
       showNotification("Donation rejected!", "error");
@@ -144,6 +136,7 @@ const AdminDashboard = () => {
       <div className={styles.header}>
         <h2>Admin Dashboard</h2>
 
+        {/* Pending Student Requests */}
         <h3>Pending Requests</h3>
         <div
           className={`${styles.container} ${
@@ -153,10 +146,118 @@ const AdminDashboard = () => {
           {pendingRequests.length === 0 ? (
             <p className={styles.noRequest}>No pending requests</p>
           ) : (
-            <div className={styles.grid}></div>
+            <div className={styles.grid}>
+              {pendingRequests.map((req) => (
+                <div key={req.id} className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <h3 className={styles.studentName}>
+                      {req.fullName || "Unnamed Student"}
+                    </h3>
+                  </div>
+                  <div className={styles.cardContent}>
+                    <div className={styles.cardLeft}>
+                      <p>
+                        <strong>Email:</strong> {req.email}
+                      </p>
+                      <p>
+                        <strong>Phone:</strong> {req.phone || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Address:</strong> {req.address || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Reason:</strong> {req.reason}
+                      </p>
+                      <p>
+                        <strong>Amount:</strong> ₹{req.amount}
+                      </p>
+                      <p>
+                        <strong>Account Number:</strong>{" "}
+                        {req.accountNumber || "N/A"}
+                      </p>
+                      <p>
+                        <strong>IFSC Code:</strong> {req.ifscCode || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Bank Name:</strong> {req.bankName || "N/A"}
+                      </p>
+                    </div>
+                    <div className={styles.cardRight}>
+                      <p>
+                        <strong>Student ID:</strong>
+                      </p>
+                      <a
+                        href={req.studentId}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img src={req.studentId} alt="Student ID" />
+                      </a>
+                      <p>
+                        <strong>Request Proof:</strong>
+                      </p>
+                      <a
+                        href={req.fundRequest}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img src={req.fundRequest} alt="Request Proof" />
+                      </a>
+                    </div>
+                  </div>
+                  <div className={styles.actions}>
+                    <button
+                      onClick={() => updateStatus(req.id, "Approved")}
+                      className={styles.approveBtn}
+                    >
+                      Approve
+                    </button>
+                    {activeRejectId === req.id ? (
+                      <div className={styles.rejectBox}>
+                        <textarea
+                          placeholder="Enter reason for rejection"
+                          value={reasonInputs[req.id] || ""}
+                          onChange={(e) =>
+                            handleRejectReasonChange(req.id, e.target.value)
+                          }
+                          className={styles.textarea}
+                        />
+                        <button
+                          className={styles.confirmRejectBtn}
+                          onClick={() =>
+                            updateStatus(
+                              req.id,
+                              "Rejected",
+                              reasonInputs[req.id] || ""
+                            )
+                          }
+                          disabled={!reasonInputs[req.id]}
+                        >
+                          Confirm Reject
+                        </button>
+                        <button
+                          className={styles.cancelBtn}
+                          onClick={() => setActiveRejectId(null)}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setActiveRejectId(req.id)}
+                        className={styles.rejectBtn}
+                      >
+                        Reject
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 
+        {/* Pending Donation Approvals */}
         <h3>Pending Donations</h3>
         <div
           className={`${styles.container} ${
@@ -169,43 +270,52 @@ const AdminDashboard = () => {
             <div className={styles.grid}>
               {donations.map((donation) => (
                 <div key={donation.id} className={styles.card}>
-                  <h3 className={styles.studentName}>
-                    Donor: {donation.donorName || "Anonymous"}
-                  </h3>
-                  <p>
-                    <strong>Student:</strong> {donation.studentName}
-                  </p>
-                  <p>
-                    <strong>Amount:</strong> ₹{donation.amount}
-                  </p>
-                  <p>
-                    <strong>Account Number:</strong> {donation.accountNumber}
-                  </p>
-                  <p>
-                    <strong>IFSC Code:</strong> {donation.ifscCode}
-                  </p>
-                  <p>
-                    <strong>UPI ID:</strong> {donation.upiId}
-                  </p>
-                  <div className={styles.cardRight}>
-                    <p>
-                      <strong>Payment Proof:</strong>
-                    </p>
-                    {donation.paymentProof ? (
-                      <a
-                        href={donation.paymentProof}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          src={donation.paymentProof}
-                          alt="Payment Screenshot"
-                          style={{ maxWidth: "200px" }}
-                        />
-                      </a>
-                    ) : (
-                      <p>No screenshot available</p>
-                    )}
+                  <div className={styles.cardHeader}>
+                    <h3 className={styles.studentName}>
+                      Donor: {donation.donorName || "Anonymous"}
+                    </h3>
+                  </div>
+                  <div className={styles.cardContent}>
+                    <div className={styles.cardLeft}>
+                      <p>
+                        <strong>Student:</strong> {donation.studentName}
+                      </p>
+                      <p>
+                        <strong>Amount:</strong> ₹{donation.amount}
+                      </p>
+                      <p>
+                        <strong>Account Number:</strong>{" "}
+                        {donation.accountNumber || "N/A"}
+                      </p>
+                      <p>
+                        <strong>IFSC Code:</strong> {donation.ifscCode || "N/A"}
+                      </p>
+                      <p>
+                        <strong>Bank Name:</strong> {donation.bankName || "N/A"}
+                      </p>
+                      <p>
+                        <strong>UPI ID:</strong> {donation.upiId || "N/A"}
+                      </p>
+                    </div>
+                    <div className={styles.cardRight}>
+                      <p>
+                        <strong>Payment Proof:</strong>
+                      </p>
+                      {donation.paymentProof ? (
+                        <a
+                          href={donation.paymentProof}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={donation.paymentProof}
+                            alt="Payment Screenshot"
+                          />
+                        </a>
+                      ) : (
+                        <p>No screenshot available</p>
+                      )}
+                    </div>
                   </div>
                   <div className={styles.actions}>
                     <button
@@ -214,7 +324,7 @@ const AdminDashboard = () => {
                     >
                       Approve
                     </button>
-                    {activeDonationRejectId === donation.id ? (
+                    {activeRejectId === donation.id ? (
                       <div className={styles.rejectBox}>
                         <textarea
                           placeholder="Enter reason for rejection"
@@ -229,14 +339,19 @@ const AdminDashboard = () => {
                         />
                         <button
                           className={styles.confirmRejectBtn}
-                          onClick={() => rejectDonation(donation.id)}
+                          onClick={() =>
+                            rejectDonation(
+                              donation.id,
+                              reasonInputs[donation.id] || ""
+                            )
+                          }
                           disabled={!reasonInputs[donation.id]}
                         >
                           Confirm Reject
                         </button>
                         <button
                           className={styles.cancelBtn}
-                          onClick={() => setActiveDonationRejectId(null)}
+                          onClick={() => setActiveRejectId(null)}
                         >
                           Cancel
                         </button>
@@ -244,7 +359,7 @@ const AdminDashboard = () => {
                     ) : (
                       <button
                         className={styles.rejectBtn}
-                        onClick={() => setActiveDonationRejectId(donation.id)}
+                        onClick={() => setActiveRejectId(donation.id)}
                       >
                         Reject
                       </button>

@@ -33,7 +33,6 @@ const StudentDashboard = () => {
   const [notification, setNotification] = useState({ message: "", type: "" });
   const [step, setStep] = useState(1);
   const [donations, setDonations] = useState([]);
-  const [goalAmount, setGoalAmount] = useState(10000);
   const [totalCollected, setTotalCollected] = useState(0);
 
   const navigate = useNavigate();
@@ -71,7 +70,10 @@ const StudentDashboard = () => {
     fetchDonations();
   }, []);
 
-  const percentage = Math.min((totalCollected / goalAmount) * 100, 100);
+  const percentage = Math.min(
+    (totalCollected / (parseFloat(amount) || 1)) * 100,
+    100
+  );
 
   useEffect(() => {
     const currentUser = auth.currentUser;
@@ -398,23 +400,16 @@ const StudentDashboard = () => {
               <h2>Donation Progress</h2>
               <div style={{ width: 200, height: 200, margin: "1rem auto" }}>
                 <CircularProgressbar
-                  value={Math.min(
-                    (totalCollected / (parseFloat(amount) || 1)) * 100,
-                    100
-                  )}
-                  text={`${Math.floor(
-                    Math.min(
-                      (totalCollected / (parseFloat(amount) || 1)) * 100,
-                      100
-                    )
-                  )}%`}
+                  value={percentage}
+                  text={`${Math.floor(percentage)}%`}
                   styles={buildStyles({
-                    pathColor: "#00C853",
+                    pathColor: percentage === 100 ? "#00C853" : "#f44336", // Green for 100%, Red otherwise
                     textColor: "#333",
                     trailColor: "#ddd",
                   })}
                 />
               </div>
+
               <p style={{ textAlign: "center" }}>
                 ₹{totalCollected} raised out of ₹{amount}
               </p>

@@ -13,6 +13,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Login from "./components/Login";
 import { AuthProvider } from "./context/AuthContext";
 import AdminRoute from "./components/AdminRoute";
+import DonorHistory from "./components/DonorHistory";
 function App() {
   return (
     <AuthProvider>
@@ -35,6 +36,7 @@ function App() {
           />
           <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/donor-dashboard" element={<DonorDashboard />} />
+          <Route path="/donor-history" element={<DonorHistory />} />
         </Routes>
         <Footer />
       </Router>

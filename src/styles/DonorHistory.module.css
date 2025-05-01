@@ -1,0 +1,41 @@
+.historyContainer {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.donationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.donationCard {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.donationCard h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.donationCard p {
+  margin: 5px 0;
+}
+.toggleButton {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.toggleButton:hover {
+  background-color: #45a049;
+}

@@ -90,6 +90,17 @@ const Header = () => {
                 >
                   Dashboard
                 </Link>
+
+                {/* Show 'History' only for Donors */}
+                {userData?.role === "donor" && (
+                  <Link
+                    to="/donor-history" // Update with the correct route
+                    className={styles.dropdownItem}
+                  >
+                    History
+                  </Link>
+                )}
+
                 <button onClick={handleLogout} className={styles.dropdownItem}>
                   Logout
                 </button>

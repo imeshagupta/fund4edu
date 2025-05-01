@@ -3,6 +3,7 @@ import { auth, db } from "../services/Firebase";
 import {
   collection,
   getDocs,
+  getDoc,
   updateDoc,
   doc,
   addDoc,
@@ -46,7 +47,7 @@ const DonorDashboard = () => {
     setTimeout(() => setNotification({ message: "", type: "" }), 3000);
   };
 
-  const markAsPaid = async (id) => {
+  const markAsPaid = async (studentId, paidAmount, paymentScreenshot) => {
     if (!paidAmount || isNaN(paidAmount) || Number(paidAmount) <= 0) {
       showNotification("Please enter a valid paid amount.", "error");
       return;
@@ -58,28 +59,46 @@ const DonorDashboard = () => {
     }
 
     const currentUser = auth.currentUser;
-    const donorName = currentUser?.displayName || "Anonymous";
-    const donorUid = currentUser?.uid;
+    if (!currentUser) {
+      showNotification("User not authenticated.", "error");
+      return;
+    }
+
+    const donorUid = currentUser.uid;
 
     try {
-      await updateDoc(doc(db, "users", id), {
+      // Retrieve donor's full name from the 'users' collection
+      const donorDocRef = doc(db, "users", donorUid);
+      const donorDocSnap = await getDoc(donorDocRef);
+
+      if (!donorDocSnap.exists()) {
+        showNotification("Donor information not found.", "error");
+        return;
+      }
+
+      const donorData = donorDocSnap.data();
+      const donorName = donorData.fullName || "Anonymous";
+
+      // Update the student's document with payment status
+      await updateDoc(doc(db, "users", studentId), {
         status: "Paid",
         paidAmount: Number(paidAmount),
         paymentProof: paymentScreenshot,
         lastDonorName: donorName,
       });
 
+      // Add donation record to Firestore
       await addDoc(collection(db, "donations"), {
-        studentUid: id,
+        studentUid: studentId,
         donorUid,
-        donorName: currentUser?.displayName || "Anonymous",
+        donorName: donorName,
         amount: Number(paidAmount),
         status: "paid",
         paymentProof: paymentScreenshot,
         timestamp: new Date(),
       });
 
-      showNotification("Student has been notified as Paid.", "success");
+      showNotification("Payment goes on Admin's review", "success");
       setSelectedStudent(null);
     } catch (error) {
       console.error("Error updating payment status:", error);
@@ -135,8 +154,28 @@ const DonorDashboard = () => {
                   const file = e.target.files[0];
                   if (file) {
                     const reader = new FileReader();
-                    reader.onloadend = () => {
-                      setPaymentScreenshot(reader.result);
+                    reader.onload = (event) => {
+                      const img = new Image();
+                      img.onload = () => {
+                        const canvas = document.createElement("canvas");
+                        const maxWidth = 800; // scale down width
+                        const scaleSize = maxWidth / img.width;
+                        canvas.width = maxWidth;
+                        canvas.height = img.height * scaleSize;
+
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const compressedDataUrl = canvas.toDataURL(
+                          "image/jpeg",
+                          0.6
+                        ); // compression here
+                        setPaymentScreenshot(compressedDataUrl);
+                        console.log(
+                          "Compressed image base64 length:",
+                          compressedDataUrl.length
+                        );
+                      };
+                      img.src = event.target.result;
                     };
                     reader.readAsDataURL(file);
                   }
@@ -149,7 +188,9 @@ const DonorDashboard = () => {
             <div className={styles.buttonGroup}>
               <button
                 className={styles.paidBtn}
-                onClick={() => markAsPaid(selectedStudent.id)}
+                onClick={() =>
+                  markAsPaid(selectedStudent.id, paidAmount, paymentScreenshot)
+                }
                 disabled={!paymentScreenshot}
               >
                 Mark as Paid
@@ -170,7 +211,13 @@ const DonorDashboard = () => {
         <div className={styles.studentList}>
           {students.map((student) => (
             <div key={student.id} className={styles.studentCard}>
-              <h3>{student.fullName || "Unnamed Student"}</h3>
+              <h3>
+                {student.fullName ||
+                  student.name ||
+                  student.studentName ||
+                  "Unnamed Student"}
+              </h3>
+
               <div className={styles.cardContent}>
                 <div className={styles.leftDetails}>
                   <p>
@@ -196,11 +243,14 @@ const DonorDashboard = () => {
                       <strong>Student ID:</strong>
                     </p>
                     <a
-                      href={student.studentId}
+                      href={student.studentId || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <img src={student.studentId} alt="Student ID" />
+                      <img
+                        src={student.studentId || "default-image.jpg"}
+                        alt="Student ID"
+                      />
                     </a>
                   </div>
                   <div>
@@ -208,11 +258,14 @@ const DonorDashboard = () => {
                       <strong>Proof:</strong>
                     </p>
                     <a
-                      href={student.fundRequest}
+                      href={student.fundRequest || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <img src={student.fundRequest} alt="Fund Proof" />
+                      <img
+                        src={student.fundRequest || "default-image.jpg"}
+                        alt="Fund Proof"
+                      />
                     </a>
                   </div>
                 </div>
