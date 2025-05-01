@@ -8,7 +8,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -22,14 +22,14 @@ export const AuthProvider = ({ children }) => {
       } else {
         setUserData(null);
       }
-      setLoading(false); // Set loading to false once user data is fetched
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
   const logout = () => {
     signOut(auth);
-    setUserData(null); // Clear user data on logout
+    setUserData(null);
   };
 
   return (

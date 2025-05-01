@@ -97,8 +97,8 @@ const Header = () => {
             )}
           </div>
         ) : (
-          <Link to="/signup">
-            <button className={styles.signupBtn}>Sign Up</button>
+          <Link to="/login">
+            <button className={styles.loginBtn}>Login</button>
           </Link>
         )}
       </div>

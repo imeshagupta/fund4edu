@@ -1,109 +1,200 @@
 .dashboardPage {
-  background-color: black;
   min-height: 100vh;
-  padding: 20px;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #f0f4ff, #e4eaff);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
 .container {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 800px;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
-
-.container:hover {
-  transform: translateY(-5px);
-}
-
 .container h1 {
   text-align: center;
-  color: #6e420b;
-  margin-bottom: 20px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  font-size: 28px;
+  margin-bottom: 15px;
+  color: #ff9933;
+}
+.donationsSection {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: #f7f7f7;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-p {
-  font-size: 16px;
-  color: #444;
-  margin-bottom: 15px;
-  line-height: 1.6;
+.totalAmount {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.donationList {
+  margin-top: 1rem;
+}
+.donationSummary {
+  background: #fff0f5;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.progressContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 120px;
+  margin: 0 auto 1rem auto;
+}
+
+.progressCircle {
+  width: 100px;
+  height: 100px;
+}
+
+.fundDetails p {
+  margin: 4px 0;
+}
+
+.donorList {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.donorList li {
+  margin-bottom: 5px;
+}
+
+.donationCard {
+  background-color: #fff;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
 .uploadSection,
 .inputGroup {
-  margin-bottom: 25px;
+  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
 }
 
-label {
+.uploadSection label,
+.inputGroup label {
   font-weight: 600;
-  color: #ff8c00;
-  margin-bottom: 8px;
-}
-
-input[type="file"],
-input[type="number"],
-input[type="tel"],
-textarea {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 140, 0, 0.4);
-  font-size: 16px;
-  background-color: #fafafa;
+  margin-bottom: 0.5rem;
   color: #333;
-  transition: border 0.3s ease;
 }
 
-input[type="file"]:focus,
-input[type="number"]:focus,
-textarea:focus {
-  border-color: #ff8c00;
-  box-shadow: 0px 0px 10px rgba(255, 140, 0, 0.5);
+.uploadSection input[type="file"],
+.inputGroup input,
+.inputGroup textarea {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
 }
 
-textarea {
-  min-height: 100px;
+.inputGroup textarea {
   resize: vertical;
+  min-height: 80px;
+  max-height: 200px;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.submitBtn,
+.backBtn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .submitBtn {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(to right, #ff8c00, #d62828);
+  background-color: #ff9933;
   color: white;
-  font-size: 18px;
-  font-weight: bold;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .submitBtn:hover {
-  background: linear-gradient(to right, #d62828, #ff8c00);
-  transform: scale(1.05);
+  background-color: #c87017;
 }
 
-.submitBtn:active {
-  transform: scale(1);
+.backBtn {
+  background-color: #ccc;
+  color: #333;
 }
 
-@media (max-width: 500px) {
+.backBtn:hover {
+  background-color: #bbb;
+}
+
+.notification {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.info {
+  background-color: #e7f3fe;
+  color: #3178c6;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.pendingList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.pendingCard {
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #4caf50;
+}
+
+.pendingCard p {
+  margin: 0.5rem 0;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
   .container {
-    padding: 25px;
-    margin: 20px;
+    padding: 1rem;
   }
 
-  h2 {
-    font-size: 24px;
-  }
-
-  .submitBtn {
-    font-size: 16px;
+  .buttonGroup {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem;
   }
 }

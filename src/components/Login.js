@@ -33,7 +33,7 @@ const Login = () => {
         } else if (role === "donor") {
           navigate("/donor-dashboard");
         } else if (role === "admin") {
-          navigate("/admin-dashboard"); // ✅ Admin directly admin dashboard
+          navigate("/admin-dashboard");
         } else {
           setError("Unknown role assigned. Please contact support.");
         }

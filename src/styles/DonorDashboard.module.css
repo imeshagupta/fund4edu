@@ -1,5 +1,5 @@
 .container {
-  padding: 30px 20px;
+  padding: 40px 20px 30px;
   background: #f9f9ff;
   min-height: 100vh;
   font-family: "Segoe UI", sans-serif;
@@ -19,6 +19,68 @@ h2 {
   color: #777;
   margin-bottom: 30px;
   text-align: center;
+}
+.selectedStudentSection {
+  margin-top: 20px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-left: 5px solid #ff8c00;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.paymentSection {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.amountInput {
+  margin-top: 10px;
+  padding: 10px;
+  width: 220px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.buttonGroup {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.paidBtn {
+  background: #ff8c00;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  font-size: 16px;
+}
+
+.paidBtn:hover {
+  background: #d17403;
+}
+
+.backBtn {
+  background: linear-gradient(to right, #aaa, #888);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  font-size: 16px;
+}
+
+.backBtn:hover {
+  background: linear-gradient(to right, #888, #aaa);
 }
 
 .emptyMessage {

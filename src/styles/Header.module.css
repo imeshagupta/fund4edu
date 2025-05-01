@@ -46,7 +46,7 @@
   gap: 10px;
 }
 
-.signupBtn,
+.loginBtn,
 .logoutBtn {
   background-color: #ff8c00;
   color: white;
@@ -58,7 +58,7 @@
   transition: background 0.3s ease-in-out;
 }
 
-.signupBtn:hover,
+.loginBtn:hover,
 .logoutBtn:hover {
   background-color: #e67600;
 }
@@ -184,7 +184,7 @@
     gap: 5px;
   }
 
-  .signupBtn,
+  .loginBtn,
   .logoutBtn {
     width: 100%;
     text-align: center;
@@ -209,7 +209,7 @@
     gap: 5px;
   }
 
-  .signupBtn,
+  .loginBtn,
   .logoutBtn {
     width: auto;
     margin-left: 15px;
@@ -234,5 +234,6 @@
   .profileMenuWrapper {
     width: 100%;
     text-align: center;
+    margin-left: 10px;
   }
 }

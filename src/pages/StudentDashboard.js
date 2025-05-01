@@ -7,8 +7,11 @@ import {
   setDoc,
   collection,
   getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import styles from "../styles/StudentDashboard.module.css";
 
 const StudentDashboard = () => {
@@ -19,11 +22,19 @@ const StudentDashboard = () => {
   const [amount, setAmount] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [ifscCode, setIfscCode] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [upiId, setUpiId] = useState("");
   const [status, setStatus] = useState("Pending");
   const [submitted, setSubmitted] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [notification, setNotification] = useState({ message: "", type: "" });
+  const [step, setStep] = useState(1);
+  const [donations, setDonations] = useState([]);
+  const [goalAmount, setGoalAmount] = useState(10000);
+  const [totalCollected, setTotalCollected] = useState(0);
 
   const navigate = useNavigate();
 
@@ -31,6 +42,36 @@ const StudentDashboard = () => {
     setNotification({ message, type });
     setTimeout(() => setNotification({ message: "", type: "" }), 3000);
   };
+
+  useEffect(() => {
+    const fetchDonations = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const q = query(
+        collection(db, "donations"),
+        where("studentUid", "==", user.uid),
+        where("status", "==", "paid")
+      );
+
+      const querySnapshot = await getDocs(q);
+      const donationsList = [];
+      let total = 0;
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        donationsList.push(data);
+        total += Number(data.amount);
+      });
+
+      setDonations(donationsList);
+      setTotalCollected(total);
+    };
+
+    fetchDonations();
+  }, []);
+
+  const percentage = Math.min((totalCollected / goalAmount) * 100, 100);
 
   useEffect(() => {
     const currentUser = auth.currentUser;
@@ -53,13 +94,24 @@ const StudentDashboard = () => {
         setAddress(data.address || "");
         setStatus(data.status || "Pending");
         setIsAdmin(data.isAdmin || false);
+        setAccountNumber(data.accountNumber || "");
+        setIfscCode(data.ifscCode || "");
+        setBankName(data.bankName || "");
+        setUpiId(data.upiId || "");
 
-        // Update the reason only when the status is "Rejected"
         if (data.status === "Rejected" && data.rejectionReason) {
-          setReason(data.rejectionReason); // Display rejection reason if rejected
+          setReason(data.rejectionReason);
         }
 
-        if (data.studentId && data.fundRequest && data.reason && data.amount) {
+        if (
+          data.studentId &&
+          data.fundRequest &&
+          data.reason &&
+          data.amount &&
+          data.accountNumber &&
+          data.ifscCode &&
+          data.bankName
+        ) {
           setSubmitted(true);
         }
       }
@@ -111,9 +163,12 @@ const StudentDashboard = () => {
       !reason.trim() ||
       !amount ||
       !phone.trim() ||
-      !address.trim()
+      !address.trim() ||
+      !accountNumber.trim() ||
+      !ifscCode.trim() ||
+      !bankName.trim()
     ) {
-      showNotification("Please fill all fields.", "error");
+      showNotification("Please fill all required fields.", "error");
       return;
     }
 
@@ -136,6 +191,10 @@ const StudentDashboard = () => {
           amount,
           phone,
           address,
+          accountNumber,
+          ifscCode,
+          bankName,
+          upiId,
           status: "Pending",
         },
         { merge: true }
@@ -148,20 +207,6 @@ const StudentDashboard = () => {
     }
   };
 
-  const updateStatus = async (id, status, rejectionReason = "") => {
-    try {
-      await updateDoc(doc(db, "users", id), {
-        status,
-        rejectionReason: status === "Rejected" ? rejectionReason : "", // Only set rejectionReason if rejected
-      });
-      setPendingRequests((prev) => prev.filter((req) => req.id !== id));
-      showNotification(`${status} request successfully!`, "success");
-    } catch (error) {
-      console.error("Error updating status:", error);
-      showNotification("Failed to update status. Please try again.", "error");
-    }
-  };
-
   const handleReSubmit = async () => {
     if (!user) {
       showNotification("User not logged in!", "error");
@@ -169,21 +214,22 @@ const StudentDashboard = () => {
     }
 
     try {
-      // Reset status and rejectionReason for re-submission
       await updateDoc(doc(db, "users", user.uid), {
         status: "Pending",
-        rejectionReason: "", // Clear the rejection reason
+        rejectionReason: "",
       });
-
-      // Reset the form fields for new submission
       setStatus("Pending");
       setReason("");
       setAmount("");
       setPhone("");
       setAddress("");
-      setStudentId(null); // Reset uploaded student ID
-      setFundRequest(null); // Reset uploaded fund request
-      setSubmitted(false); // Allow new submission
+      setStudentId(null);
+      setFundRequest(null);
+      setAccountNumber("");
+      setIfscCode("");
+      setBankName("");
+      setUpiId("");
+      setSubmitted(false);
       showNotification("You can now re-submit your request.", "success");
     } catch (error) {
       console.error("Error re-submitting request:", error);
@@ -191,14 +237,133 @@ const StudentDashboard = () => {
     }
   };
 
+  const renderStepOne = () => (
+    <>
+      <div className={styles.uploadSection}>
+        <label>Upload Student ID:</label>
+        <input type="file" onChange={(e) => handleFileUpload(e, "studentId")} />
+        {studentId && <p>Uploaded ✅</p>}
+      </div>
+
+      <div className={styles.uploadSection}>
+        <label>Upload College Approved Fund Request:</label>
+        <input
+          type="file"
+          onChange={(e) => handleFileUpload(e, "fundRequest")}
+        />
+        {fundRequest && <p>Uploaded ✅</p>}
+      </div>
+
+      <div className={styles.inputGroup}>
+        <label>Phone Number:</label>
+        <input
+          type="tel"
+          value={phone}
+          onChange={(e) => {
+            const input = e.target.value;
+            if (/^\d{0,10}$/.test(input)) setPhone(input);
+          }}
+          placeholder="Enter 10-digit phone number"
+        />
+      </div>
+
+      <div className={styles.inputGroup}>
+        <label>Address:</label>
+        <textarea
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+      </div>
+
+      <div className={styles.buttonGroup}>
+        <button onClick={() => setStep(2)} className={styles.submitBtn}>
+          Next
+        </button>
+      </div>
+    </>
+  );
+
+  const renderStepTwo = () => (
+    <>
+      <div className={styles.inputGroup}>
+        <label>Reason for Request:</label>
+        <textarea value={reason} onChange={(e) => setReason(e.target.value)} />
+      </div>
+
+      <div className={styles.inputGroup}>
+        <label>Required Amount (₹):</label>
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+      </div>
+
+      <div className={styles.buttonGroup}>
+        <button onClick={() => setStep(1)} className={styles.backBtn}>
+          Back
+        </button>
+        <button onClick={() => setStep(3)} className={styles.submitBtn}>
+          Next
+        </button>
+      </div>
+    </>
+  );
+
+  const renderStepThree = () => (
+    <>
+      <div className={styles.inputGroup}>
+        <label>Bank Account Number:</label>
+        <input
+          type="text"
+          value={accountNumber}
+          onChange={(e) => setAccountNumber(e.target.value)}
+        />
+      </div>
+
+      <div className={styles.inputGroup}>
+        <label>IFSC Code:</label>
+        <input
+          type="text"
+          value={ifscCode}
+          onChange={(e) => setIfscCode(e.target.value)}
+        />
+      </div>
+
+      <div className={styles.inputGroup}>
+        <label>Bank Name:</label>
+        <input
+          type="text"
+          value={bankName}
+          onChange={(e) => setBankName(e.target.value)}
+        />
+      </div>
+
+      <div className={styles.inputGroup}>
+        <label>UPI ID (optional):</label>
+        <input
+          type="text"
+          value={upiId}
+          onChange={(e) => setUpiId(e.target.value)}
+          placeholder="example@upi"
+        />
+      </div>
+
+      <div className={styles.buttonGroup}>
+        <button onClick={() => setStep(2)} className={styles.backBtn}>
+          Back
+        </button>
+        <button onClick={handleSubmit} className={styles.submitBtn}>
+          Submit Request
+        </button>
+      </div>
+    </>
+  );
+
   return (
     <div className={styles.dashboardPage}>
       {notification.message && (
-        <div
-          className={`${styles.notification} ${
-            styles[notification.type] || styles.info
-          }`}
-        >
+        <div className={`${styles.notification} ${styles[notification.type]}`}>
           {notification.message}
         </div>
       )}
@@ -206,173 +371,114 @@ const StudentDashboard = () => {
       <div className={styles.container}>
         <h1>{isAdmin ? "Admin Dashboard" : "Student Dashboard"}</h1>
 
-        {isAdmin ? (
-          <div>
-            <h3>Pending Requests</h3>
-            {pendingRequests.length === 0 ? (
-              <p>No pending requests</p>
-            ) : (
-              pendingRequests.map((req) => (
-                <div key={req.id} className={styles.card}>
-                  <p>
-                    <strong>Email:</strong> {req.email}
-                  </p>
-                  <p>
-                    <strong>Reason:</strong>{" "}
-                    {req.status === "Rejected"
-                      ? req.rejectionReason
-                      : req.reason}
-                  </p>
-                  <p>
-                    <strong>Amount:</strong> ₹{req.amount}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {req.phone}
-                  </p>
-                  <p>
-                    <strong>Address:</strong> {req.address}
-                  </p>
-                  <a
-                    href={req.studentId}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    View ID
-                  </a>
-                  <br />
-                  <a
-                    href={req.fundRequest}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    View Request
-                  </a>
-                  <div className={styles.actions}>
-                    <button onClick={() => updateStatus(req.id, "Approved")}>
-                      Approve
-                    </button>
-                    <button onClick={() => updateStatus(req.id, "Rejected")}>
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        ) : (
+        {!isAdmin && !submitted && (
           <>
-            {!submitted && (
-              <>
-                <div className={styles.uploadSection}>
-                  <label>Upload Student ID(Max size: 400 KB):</label>
-                  <input
-                    type="file"
-                    onChange={(e) => handleFileUpload(e, "studentId")}
-                  />
-                  {studentId && <p>Uploaded ✅</p>}
-                </div>
-
-                <div className={styles.uploadSection}>
-                  <label>
-                    Upload College Approved Fund Request(Max size: 400 KB):
-                  </label>
-                  <input
-                    type="file"
-                    onChange={(e) => handleFileUpload(e, "fundRequest")}
-                  />
-                  {fundRequest && <p>Uploaded ✅</p>}
-                </div>
-
-                <div className={styles.inputGroup}>
-                  <label>Phone Number:</label>
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => {
-                      const input = e.target.value;
-                      if (/^\d{0,10}$/.test(input)) {
-                        setPhone(input);
-                      }
-                    }}
-                    placeholder="Enter 10-digit phone number"
-                  />
-                </div>
-
-                <div className={styles.inputGroup}>
-                  <label>Address(Max length: 250 characters):</label>
-                  <textarea
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Enter your full address"
-                  />
-                </div>
-
-                <div className={styles.inputGroup}>
-                  <label>Reason for Request(Max length: 500 characters):</label>
-                  <textarea
-                    value={reason}
-                    onChange={(e) => setReason(e.target.value)}
-                  />
-                </div>
-
-                <div className={styles.inputGroup}>
-                  <label>Required Amount (Max 10 lakhs):</label>
-                  <input
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                  />
-                </div>
-
-                <button
-                  className={styles.submitBtn}
-                  onClick={handleSubmit}
-                  disabled={
-                    !studentId ||
-                    !fundRequest ||
-                    !reason.trim() ||
-                    !amount ||
-                    !phone.trim() ||
-                    !address.trim() ||
-                    !/^[6-9]\d{9}$/.test(phone)
-                  }
-                >
-                  Submit Request
-                </button>
-              </>
-            )}
-
-            {submitted && (
-              <p>
-                <strong>Status:</strong>{" "}
-                <span
-                  style={{
-                    color:
-                      status === "Approved"
-                        ? "green"
-                        : status === "Rejected"
-                        ? "red"
-                        : "orange",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {status}
-                </span>
-              </p>
-            )}
-
-            {status === "Rejected" && (
-              <div>
-                <p>
-                  <strong>Rejection Reason:</strong> {reason}
-                </p>
-                <button onClick={handleReSubmit} className={styles.submitBtn}>
-                  Re-submit Request
-                </button>
-              </div>
-            )}
+            {step === 1 && renderStepOne()}
+            {step === 2 && renderStepTwo()}
+            {step === 3 && renderStepThree()}
           </>
         )}
+
+        {!isAdmin && submitted && status === "Rejected" && (
+          <div className={styles.rejectedBox}>
+            <p>
+              <strong>Rejection Reason:</strong> {reason}
+            </p>
+            <button onClick={handleReSubmit} className={styles.submitBtn}>
+              Re-submit Request
+            </button>
+          </div>
+        )}
+
+        {!isAdmin &&
+          submitted &&
+          status === "Approved" &&
+          donations.length > 0 && (
+            <div className={styles.donationsSection}>
+              <h2>Donation Progress</h2>
+              <div style={{ width: 200, height: 200, margin: "1rem auto" }}>
+                <CircularProgressbar
+                  value={Math.min(
+                    (totalCollected / (parseFloat(amount) || 1)) * 100,
+                    100
+                  )}
+                  text={`${Math.floor(
+                    Math.min(
+                      (totalCollected / (parseFloat(amount) || 1)) * 100,
+                      100
+                    )
+                  )}%`}
+                  styles={buildStyles({
+                    pathColor: "#00C853",
+                    textColor: "#333",
+                    trailColor: "#ddd",
+                  })}
+                />
+              </div>
+              <p style={{ textAlign: "center" }}>
+                ₹{totalCollected} raised out of ₹{amount}
+              </p>
+
+              <h3>Donors List</h3>
+              <ul>
+                {donations.map((donation, index) => (
+                  <li key={index}>
+                    {donation.donorName || "Anonymous"} - ₹{donation.amount}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+        {!isAdmin && submitted && status === "Paid" && (
+          <div className={styles.donationsSection}>
+            <h2>Fund Complete 🎉</h2>
+            <div style={{ width: 200, height: 200, margin: "1rem auto" }}>
+              <CircularProgressbar
+                value={100}
+                text={`100%`}
+                styles={buildStyles({
+                  pathColor: "#4caf50",
+                  textColor: "#333",
+                  trailColor: "#ddd",
+                })}
+              />
+            </div>
+            <p style={{ textAlign: "center" }}>
+              ₹{totalCollected} raised towards your goal of ₹{amount}.
+            </p>
+            <h3>Donors List</h3>
+            <ul>
+              {donations.map((donation, index) => (
+                <li key={index}>
+                  {donation.donorName || "Anonymous"} donated ₹{donation.amount}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {!isAdmin &&
+          submitted &&
+          status !== "Rejected" &&
+          !(status === "Approved" && totalCollected > 0) && (
+            <p>
+              <strong>Status:</strong>{" "}
+              <span
+                style={{
+                  color:
+                    status === "Approved"
+                      ? "green"
+                      : status === "Rejected"
+                      ? "red"
+                      : "orange",
+                  fontWeight: "bold",
+                }}
+              >
+                {status}
+              </span>
+            </p>
+          )}
       </div>
     </div>
   );
