@@ -13,6 +13,20 @@ h2 {
   margin-bottom: 20px;
   text-align: center;
 }
+.progressLine {
+  background-color: #ddd;
+  height: 10px;
+  border-radius: 6px;
+  margin: 10px 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 0.4s ease-in-out;
+}
 
 .subtitle {
   font-size: 18px;

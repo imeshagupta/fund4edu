@@ -33,7 +33,7 @@ const DonorHistory = () => {
           let studentName = "";
 
           if (donation.studentUid) {
-            const studentRef = doc(db, "students", donation.studentUid);
+            const studentRef = doc(db, "users", donation.studentUid);
             const studentSnap = await getDoc(studentRef);
             if (studentSnap.exists()) {
               const studentData = studentSnap.data();

@@ -18,28 +18,51 @@ const DonorDashboard = () => {
   const [paidAmount, setPaidAmount] = useState("");
   const [paymentScreenshot, setPaymentScreenshot] = useState(null);
   const [notification, setNotification] = useState({ message: "", type: "" });
+  const [donationMap, setDonationMap] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchData = async () => {
       const currentUser = auth.currentUser;
       if (!currentUser) {
         navigate("/");
         return;
       }
 
-      const querySnapshot = await getDocs(collection(db, "users"));
-      const approvedStudents = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        if (data.status === "Approved") {
-          approvedStudents.push({ id: doc.id, ...data });
+      const donationsSnapshot = await getDocs(collection(db, "donations"));
+      const map = {};
+      donationsSnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (
+          (data.status === "paid" || data.status === "approved") &&
+          data.studentUid
+        ) {
+          if (!map[data.studentUid]) {
+            map[data.studentUid] = 0;
+          }
+          map[data.studentUid] += Number(data.amount);
         }
       });
-      setStudents(approvedStudents);
+      setDonationMap(map);
+
+      const querySnapshot = await getDocs(collection(db, "users"));
+      const filteredStudents = [];
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const totalCollected = map[docSnap.id] || 0;
+        const goal = Number(data.amount);
+        const shouldInclude =
+          data.status === "Approved" ||
+          (data.status === "Paid" && totalCollected < goal);
+
+        if (shouldInclude) {
+          filteredStudents.push({ id: docSnap.id, ...data });
+        }
+      });
+      setStudents(filteredStudents);
     };
 
-    fetchUserData();
+    fetchData();
   }, [navigate]);
 
   const showNotification = (message, type = "info") => {
@@ -67,7 +90,6 @@ const DonorDashboard = () => {
     const donorUid = currentUser.uid;
 
     try {
-      // Retrieve donor's full name from the 'users' collection
       const donorDocRef = doc(db, "users", donorUid);
       const donorDocSnap = await getDoc(donorDocRef);
 
@@ -79,7 +101,6 @@ const DonorDashboard = () => {
       const donorData = donorDocSnap.data();
       const donorName = donorData.fullName || "Anonymous";
 
-      // Update the student's document with payment status
       await updateDoc(doc(db, "users", studentId), {
         status: "Paid",
         paidAmount: Number(paidAmount),
@@ -87,11 +108,10 @@ const DonorDashboard = () => {
         lastDonorName: donorName,
       });
 
-      // Add donation record to Firestore
       await addDoc(collection(db, "donations"), {
         studentUid: studentId,
         donorUid,
-        donorName: donorName,
+        donorName,
         amount: Number(paidAmount),
         status: "paid",
         paymentProof: paymentScreenshot,
@@ -116,7 +136,6 @@ const DonorDashboard = () => {
       {selectedStudent ? (
         <div className={styles.selectedStudentSection}>
           <h3>{selectedStudent.fullName}</h3>
-
           <div className={styles.accountDetails}>
             <p>
               <strong>Bank Name:</strong> {selectedStudent.bankName || "N/A"}
@@ -158,7 +177,7 @@ const DonorDashboard = () => {
                       const img = new Image();
                       img.onload = () => {
                         const canvas = document.createElement("canvas");
-                        const maxWidth = 800; // scale down width
+                        const maxWidth = 800;
                         const scaleSize = maxWidth / img.width;
                         canvas.width = maxWidth;
                         canvas.height = img.height * scaleSize;
@@ -168,12 +187,8 @@ const DonorDashboard = () => {
                         const compressedDataUrl = canvas.toDataURL(
                           "image/jpeg",
                           0.6
-                        ); // compression here
-                        setPaymentScreenshot(compressedDataUrl);
-                        console.log(
-                          "Compressed image base64 length:",
-                          compressedDataUrl.length
                         );
+                        setPaymentScreenshot(compressedDataUrl);
                       };
                       img.src = event.target.result;
                     };
@@ -195,7 +210,6 @@ const DonorDashboard = () => {
               >
                 Mark as Paid
               </button>
-
               <button
                 className={styles.backBtn}
                 onClick={() => setSelectedStudent(null)}
@@ -206,82 +220,59 @@ const DonorDashboard = () => {
           </div>
         </div>
       ) : students.length === 0 ? (
-        <p className={styles.emptyMessage}>No approved funding requests yet.</p>
+        <p className={styles.emptyMessage}>No active funding requests.</p>
       ) : (
         <div className={styles.studentList}>
-          {students.map((student) => (
-            <div key={student.id} className={styles.studentCard}>
-              <h3>
-                {student.fullName ||
-                  student.name ||
-                  student.studentName ||
-                  "Unnamed Student"}
-              </h3>
+          {students.map((student) => {
+            const collected = donationMap[student.id] || 0;
+            const required = Number(student.amount);
+            const remaining = Math.max(required - collected, 0);
+            const percentage = Math.min(
+              (collected / required) * 100,
+              100
+            ).toFixed(1);
 
-              <div className={styles.cardContent}>
-                <div className={styles.leftDetails}>
-                  <p>
-                    <strong>University:</strong> {student.university || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Contact No:</strong> {student.phone || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Address:</strong> {student.address || "N/A"}
-                  </p>
-                  <p>
-                    <strong>Reason:</strong> {student.reason}
-                  </p>
-                  <p>
-                    <strong>Required Amount:</strong> ₹{student.amount}
-                  </p>
-                </div>
-
-                <div className={styles.rightImages}>
-                  <div>
+            return (
+              <div key={student.id} className={styles.studentCard}>
+                <h3>{student.fullName || "Unnamed Student"}</h3>
+                <div className={styles.cardContent}>
+                  <div className={styles.leftDetails}>
                     <p>
-                      <strong>Student ID:</strong>
+                      <strong>Reason:</strong> {student.reason}
                     </p>
-                    <a
-                      href={student.studentId || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img
-                        src={student.studentId || "default-image.jpg"}
-                        alt="Student ID"
-                      />
-                    </a>
-                  </div>
-                  <div>
                     <p>
-                      <strong>Proof:</strong>
+                      <strong>Required:</strong> ₹{required}
                     </p>
-                    <a
-                      href={student.fundRequest || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img
-                        src={student.fundRequest || "default-image.jpg"}
-                        alt="Fund Proof"
-                      />
-                    </a>
+                    <p>
+                      <strong>Collected:</strong> ₹{collected}
+                    </p>
+                    <p>
+                      <strong>Remaining:</strong> ₹{remaining}
+                    </p>
+                    <div className={styles.progressLine}>
+                      <div
+                        className={styles.progressFill}
+                        style={{ width: `${percentage}%` }}
+                      ></div>
+                    </div>
+                    <p>
+                      <small>{percentage}% funded</small>
+                    </p>
                   </div>
                 </div>
+                <button
+                  className={styles.donateBtn}
+                  onClick={() => {
+                    setSelectedStudent(student);
+                    setPaidAmount("");
+                    setPaymentScreenshot(null);
+                  }}
+                >
+                  Interested in
+                </button>
               </div>
-              <button
-                className={styles.donateBtn}
-                onClick={() => {
-                  setSelectedStudent(student);
-                  setPaidAmount("");
-                  setPaymentScreenshot(null);
-                }}
-              >
-                Interested in
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

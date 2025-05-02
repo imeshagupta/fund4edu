@@ -46,11 +46,10 @@ const StudentDashboard = () => {
     const fetchDonations = async () => {
       const user = auth.currentUser;
       if (!user) return;
-
       const q = query(
         collection(db, "donations"),
         where("studentUid", "==", user.uid),
-        where("status", "==", "paid")
+        where("status", "in", ["paid", "approved", "verified"])
       );
 
       const querySnapshot = await getDocs(q);
@@ -69,11 +68,11 @@ const StudentDashboard = () => {
 
     fetchDonations();
   }, []);
-
-  const percentage = Math.min(
-    (totalCollected / (parseFloat(amount) || 1)) * 100,
-    100
-  );
+  const numericAmount = parseFloat(amount);
+  const percentage =
+    numericAmount > 0
+      ? Math.min((totalCollected / numericAmount) * 100, 100)
+      : 0;
 
   useEffect(() => {
     const currentUser = auth.currentUser;
@@ -139,16 +138,34 @@ const StudentDashboard = () => {
       fetchRequests();
     }
   }, [isAdmin]);
+  const [studentIdSize, setStudentIdSize] = useState(null);
+  const [fundRequestSize, setFundRequestSize] = useState(null);
 
   const handleFileUpload = (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    const maxSizeInBytes = 400 * 1024;
+
+    if (file.size > maxSizeInBytes) {
+      showNotification("Please upload a file under 400 KB.", "error");
+      return;
+    }
+
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64String = reader.result;
-      if (type === "studentId") setStudentId(base64String);
-      if (type === "fundRequest") setFundRequest(base64String);
+      const fileSizeKB = (file.size / 1024).toFixed(1) + " KB";
+
+      if (type === "studentId") {
+        setStudentId(base64String);
+        setStudentIdSize(fileSizeKB);
+      }
+
+      if (type === "fundRequest") {
+        setFundRequest(base64String);
+        setFundRequestSize(fileSizeKB);
+      }
     };
     reader.readAsDataURL(file);
   };
@@ -156,6 +173,16 @@ const StudentDashboard = () => {
   const handleSubmit = async () => {
     if (!user) {
       showNotification("User not logged in!", "error");
+      return;
+    }
+
+    if (address.length > 250) {
+      showNotification("Address cannot exceed 250 characters.", "error");
+      return;
+    }
+
+    if (reason.length > 500) {
+      showNotification("Reason cannot exceed 500 characters.", "error");
       return;
     }
 
@@ -208,7 +235,6 @@ const StudentDashboard = () => {
       showNotification("Failed to submit request. Please try again.", "error");
     }
   };
-
   const handleReSubmit = async () => {
     if (!user) {
       showNotification("User not logged in!", "error");
@@ -242,18 +268,18 @@ const StudentDashboard = () => {
   const renderStepOne = () => (
     <>
       <div className={styles.uploadSection}>
-        <label>Upload Student ID:</label>
+        <label>Upload Student ID (Max 400 KB):</label>
         <input type="file" onChange={(e) => handleFileUpload(e, "studentId")} />
-        {studentId && <p>Uploaded ✅</p>}
+        {studentId && <p>Uploaded ✅ ({studentIdSize})</p>}
       </div>
 
       <div className={styles.uploadSection}>
-        <label>Upload College Approved Fund Request:</label>
+        <label>Upload College Approved Fund Request (Max 400 KB):</label>
         <input
           type="file"
           onChange={(e) => handleFileUpload(e, "fundRequest")}
         />
-        {fundRequest && <p>Uploaded ✅</p>}
+        {fundRequest && <p>Uploaded ✅ ({fundRequestSize})</p>}
       </div>
 
       <div className={styles.inputGroup}>
@@ -270,10 +296,11 @@ const StudentDashboard = () => {
       </div>
 
       <div className={styles.inputGroup}>
-        <label>Address:</label>
+        <label>Address (250 chars):</label>
         <textarea
           value={address}
           onChange={(e) => setAddress(e.target.value)}
+          maxLength={250}
         />
       </div>
 
@@ -288,8 +315,12 @@ const StudentDashboard = () => {
   const renderStepTwo = () => (
     <>
       <div className={styles.inputGroup}>
-        <label>Reason for Request:</label>
-        <textarea value={reason} onChange={(e) => setReason(e.target.value)} />
+        <label>Reason for Request (500 chars):</label>
+        <textarea
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          maxLength={500}
+        />
       </div>
 
       <div className={styles.inputGroup}>
@@ -372,7 +403,11 @@ const StudentDashboard = () => {
 
       <div className={styles.container}>
         <h1>{isAdmin ? "Admin Dashboard" : "Student Dashboard"}</h1>
-
+        {isAdmin && (
+          <p className={styles.pendingInfo}>
+            Total Pending Requests: {pendingRequests.length}
+          </p>
+        )}
         {!isAdmin && !submitted && (
           <>
             {step === 1 && renderStepOne()}
@@ -392,40 +427,35 @@ const StudentDashboard = () => {
           </div>
         )}
 
-        {!isAdmin &&
-          submitted &&
-          status === "Approved" &&
-          donations.length > 0 && (
-            <div className={styles.donationsSection}>
-              <h2>Donation Progress</h2>
-              <div style={{ width: 200, height: 200, margin: "1rem auto" }}>
-                <CircularProgressbar
-                  value={percentage}
-                  text={`${Math.floor(percentage)}%`}
-                  styles={buildStyles({
-                    pathColor: percentage === 100 ? "#00C853" : "#f44336", // Green for 100%, Red otherwise
-                    textColor: "#333",
-                    trailColor: "#ddd",
-                  })}
-                />
-              </div>
-
-              <p style={{ textAlign: "center" }}>
-                ₹{totalCollected} raised out of ₹{amount}
-              </p>
-
-              <h3>Donors List</h3>
-              <ul>
-                {donations.map((donation, index) => (
-                  <li key={index}>
-                    {donation.donorName || "Anonymous"} - ₹{donation.amount}
-                  </li>
-                ))}
-              </ul>
+        {!isAdmin && submitted && percentage < 100 && (
+          <div className={styles.donationsSection}>
+            <h2>Donation Progress</h2>
+            <div style={{ width: 200, height: 200, margin: "1rem auto" }}>
+              <CircularProgressbar
+                value={percentage}
+                text={`${Math.floor(percentage)}%`}
+                styles={buildStyles({
+                  pathColor: percentage === 100 ? "#00C853" : "#f44336",
+                  textColor: "#333",
+                  trailColor: "#ddd",
+                })}
+              />
             </div>
-          )}
+            <p style={{ textAlign: "center" }}>
+              ₹{totalCollected} raised out of ₹{amount}
+            </p>
+            <h3>Donors List</h3>
+            <ul>
+              {donations.map((donation, index) => (
+                <li key={index}>
+                  {donation.donorName || "Anonymous"} - ₹{donation.amount}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-        {!isAdmin && submitted && status === "Paid" && (
+        {!isAdmin && submitted && percentage === 100 && (
           <div className={styles.donationsSection}>
             <h2>Fund Complete 🎉</h2>
             <div style={{ width: 200, height: 200, margin: "1rem auto" }}>
@@ -433,7 +463,7 @@ const StudentDashboard = () => {
                 value={100}
                 text={`100%`}
                 styles={buildStyles({
-                  pathColor: "#4caf50",
+                  pathColor: "#00C853",
                   textColor: "#333",
                   trailColor: "#ddd",
                 })}
@@ -453,27 +483,12 @@ const StudentDashboard = () => {
           </div>
         )}
 
-        {!isAdmin &&
-          submitted &&
-          status !== "Rejected" &&
-          !(status === "Approved" && totalCollected > 0) && (
-            <p>
-              <strong>Status:</strong>{" "}
-              <span
-                style={{
-                  color:
-                    status === "Approved"
-                      ? "green"
-                      : status === "Rejected"
-                      ? "red"
-                      : "orange",
-                  fontWeight: "bold",
-                }}
-              >
-                {status}
-              </span>
-            </p>
-          )}
+        {!isAdmin && submitted && Math.floor(percentage) === 100 && (
+          <p>
+            <strong>Status:</strong>{" "}
+            <span style={{ color: "green", fontWeight: "bold" }}>Paid</span>
+          </p>
+        )}
       </div>
     </div>
   );

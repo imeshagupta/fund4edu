@@ -136,7 +136,6 @@ const AdminDashboard = () => {
       <div className={styles.header}>
         <h2>Admin Dashboard</h2>
 
-        {/* Pending Student Requests */}
         <h3>Pending Requests</h3>
         <div
           className={`${styles.container} ${
@@ -257,7 +256,6 @@ const AdminDashboard = () => {
           )}
         </div>
 
-        {/* Pending Donation Approvals */}
         <h3>Pending Donations</h3>
         <div
           className={`${styles.container} ${
