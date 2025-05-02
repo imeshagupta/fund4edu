@@ -15,6 +15,7 @@
   padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #ff9933;
 }
 .container h1 {
   text-align: center;
@@ -90,6 +91,19 @@
   margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
+}
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  border-color: #ff8c00;
+  outline: none;
 }
 
 .uploadSection label,

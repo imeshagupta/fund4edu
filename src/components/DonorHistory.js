@@ -4,28 +4,29 @@ import {
   collection,
   query,
   where,
-  getDocs,
   doc,
   getDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import styles from "../styles/DonorHistory.module.css";
+import Notification from "./Notification";
 
 const DonorHistory = () => {
   const [donations, setDonations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
-    const fetchDonationHistory = async () => {
-      const currentUser = auth.currentUser;
-      if (!currentUser) return;
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
 
+    const donationsQuery = query(
+      collection(db, "donations"),
+      where("donorUid", "==", currentUser.uid)
+    );
+
+    const unsubscribe = onSnapshot(donationsQuery, async (querySnapshot) => {
       try {
-        const donationsQuery = query(
-          collection(db, "donations"),
-          where("donorUid", "==", currentUser.uid)
-        );
-        const querySnapshot = await getDocs(donationsQuery);
-
         const donationPromises = querySnapshot.docs.map(async (docSnap) => {
           const donation = docSnap.data();
           const donationId = docSnap.id;
@@ -44,7 +45,10 @@ const DonorHistory = () => {
                 studentData.firstName ||
                 "N/A";
             } else {
-              console.warn(`Student not found: UID ${donation.studentUid}`);
+              setNotification({
+                message: `Student not found: UID ${donation.studentUid}`,
+                type: "warning",
+              });
             }
           }
 
@@ -58,13 +62,16 @@ const DonorHistory = () => {
         const donationsWithStudentNames = await Promise.all(donationPromises);
         setDonations(donationsWithStudentNames);
       } catch (error) {
-        console.error("Error fetching donation history:", error);
+        setNotification({
+          message: "Error fetching donation history: " + error.message,
+          type: "error",
+        });
       } finally {
         setLoading(false);
       }
-    };
+    });
 
-    fetchDonationHistory();
+    return () => unsubscribe();
   }, []);
 
   if (loading) {
@@ -74,6 +81,8 @@ const DonorHistory = () => {
   return (
     <div className={styles.historyContainer}>
       <h2>Your Donation History</h2>
+
+      {notification && <Notification {...notification} />}
 
       {donations.length === 0 ? (
         <p>You have not made any donations yet.</p>
@@ -90,6 +99,18 @@ const DonorHistory = () => {
               <p>
                 <strong>Status:</strong> {donation.status}
               </p>
+              {donation.status === "rejected" &&
+                (donation.rejectionReason ? (
+                  <p>
+                    <strong>Rejection Reason:</strong>{" "}
+                    {donation.rejectionReason}
+                  </p>
+                ) : (
+                  <p>
+                    <strong>Rejection Reason:</strong> No reason provided
+                  </p>
+                ))}
+
               <p>
                 <strong>Donation Date:</strong>{" "}
                 {donation.timestamp?.seconds

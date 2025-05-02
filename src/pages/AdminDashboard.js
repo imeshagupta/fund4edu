@@ -45,12 +45,15 @@ const AdminDashboard = () => {
       const donationsSnapshot = await getDocs(collection(db, "donations"));
       const usersSnapshot = await getDocs(collection(db, "users"));
 
-      // Create a map of user data (including fullName)
       const userMap = {};
       usersSnapshot.forEach((userDoc) => {
         const data = userDoc.data();
         userMap[userDoc.id] = {
           fullName: data.fullName || "Unnamed User",
+          accountNumber: data.accountNumber || "N/A",
+          ifscCode: data.ifscCode || "N/A",
+          bankName: data.bankName || "N/A",
+          upiId: data.upiId || "N/A",
         };
       });
 
@@ -65,6 +68,10 @@ const AdminDashboard = () => {
             ...data,
             donorName: donorData.fullName,
             studentName: studentData.fullName,
+            accountNumber: studentData.accountNumber || "N/A",
+            ifscCode: studentData.ifscCode || "N/A",
+            bankName: studentData.bankName || "N/A",
+            upiId: studentData.upiId || "N/A",
           });
         }
       });
@@ -94,7 +101,6 @@ const AdminDashboard = () => {
       setPendingRequests((prev) => prev.filter((req) => req.id !== id));
       showNotification(`${status} request successfully!`, "success");
     } catch (error) {
-      console.error("Error updating status:", error);
       showNotification("Failed to update status. Please try again.", "error");
     }
   };
@@ -105,7 +111,6 @@ const AdminDashboard = () => {
       setDonations((prev) => prev.filter((d) => d.id !== id));
       showNotification("Donation approved!", "success");
     } catch (err) {
-      console.error("Error approving donation:", err);
       showNotification("Failed to approve donation.", "error");
     }
   };
@@ -124,7 +129,6 @@ const AdminDashboard = () => {
       setDonations((prev) => prev.filter((d) => d.id !== id));
       showNotification("Donation rejected!", "error");
     } catch (err) {
-      console.error("Error rejecting donation:", err);
       showNotification("Failed to reject donation.", "error");
     }
   };
@@ -134,7 +138,7 @@ const AdminDashboard = () => {
       <Notification message={notification.message} type={notification.type} />
 
       <div className={styles.header}>
-        <h2>Admin Dashboard</h2>
+        <h1>Admin Dashboard</h1>
 
         <h3>Pending Requests</h3>
         <div

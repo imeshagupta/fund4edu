@@ -121,7 +121,6 @@ const DonorDashboard = () => {
       showNotification("Payment goes on Admin's review", "success");
       setSelectedStudent(null);
     } catch (error) {
-      console.error("Error updating payment status:", error);
       showNotification("Something went wrong while updating status.", "error");
     }
   };
@@ -159,7 +158,7 @@ const DonorDashboard = () => {
                 type="number"
                 value={paidAmount}
                 onChange={(e) => setPaidAmount(e.target.value)}
-                placeholder="e.g. 5000"
+                placeholder="e.g. 500"
                 className={styles.amountInput}
               />
             </label>
@@ -197,8 +196,8 @@ const DonorDashboard = () => {
                 }}
                 className={styles.amountInput}
               />
+              {paymentScreenshot && <p>Uploaded ✅</p>}
             </label>
-            {paymentScreenshot && <p>Uploaded ✅</p>}
 
             <div className={styles.buttonGroup}>
               <button
@@ -208,7 +207,7 @@ const DonorDashboard = () => {
                 }
                 disabled={!paymentScreenshot}
               >
-                Mark as Paid
+                Mark as paid for review
               </button>
               <button
                 className={styles.backBtn}

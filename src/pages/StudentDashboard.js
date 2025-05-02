@@ -231,7 +231,6 @@ const StudentDashboard = () => {
       setSubmitted(true);
       showNotification("Funding request submitted successfully!", "success");
     } catch (error) {
-      console.error("Error submitting request:", error);
       showNotification("Failed to submit request. Please try again.", "error");
     }
   };
@@ -260,7 +259,6 @@ const StudentDashboard = () => {
       setSubmitted(false);
       showNotification("You can now re-submit your request.", "success");
     } catch (error) {
-      console.error("Error re-submitting request:", error);
       showNotification("Failed to reset request. Please try again.", "error");
     }
   };
@@ -269,7 +267,11 @@ const StudentDashboard = () => {
     <>
       <div className={styles.uploadSection}>
         <label>Upload Student ID (Max 400 KB):</label>
-        <input type="file" onChange={(e) => handleFileUpload(e, "studentId")} />
+        <input
+          type="file"
+          className={styles.input}
+          onChange={(e) => handleFileUpload(e, "studentId")}
+        />
         {studentId && <p>Uploaded ✅ ({studentIdSize})</p>}
       </div>
 
@@ -277,6 +279,7 @@ const StudentDashboard = () => {
         <label>Upload College Approved Fund Request (Max 400 KB):</label>
         <input
           type="file"
+          className={styles.input}
           onChange={(e) => handleFileUpload(e, "fundRequest")}
         />
         {fundRequest && <p>Uploaded ✅ ({fundRequestSize})</p>}
@@ -287,6 +290,7 @@ const StudentDashboard = () => {
         <input
           type="tel"
           value={phone}
+          className={styles.input}
           onChange={(e) => {
             const input = e.target.value;
             if (/^\d{0,10}$/.test(input)) setPhone(input);
@@ -299,6 +303,7 @@ const StudentDashboard = () => {
         <label>Address (250 chars):</label>
         <textarea
           value={address}
+          className={styles.input}
           onChange={(e) => setAddress(e.target.value)}
           maxLength={250}
         />
@@ -318,6 +323,7 @@ const StudentDashboard = () => {
         <label>Reason for Request (500 chars):</label>
         <textarea
           value={reason}
+          className={styles.input}
           onChange={(e) => setReason(e.target.value)}
           maxLength={500}
         />
@@ -327,6 +333,7 @@ const StudentDashboard = () => {
         <label>Required Amount (₹):</label>
         <input
           type="number"
+          className={styles.input}
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
@@ -349,6 +356,7 @@ const StudentDashboard = () => {
         <label>Bank Account Number:</label>
         <input
           type="text"
+          className={styles.input}
           value={accountNumber}
           onChange={(e) => setAccountNumber(e.target.value)}
         />
@@ -358,6 +366,7 @@ const StudentDashboard = () => {
         <label>IFSC Code:</label>
         <input
           type="text"
+          className={styles.input}
           value={ifscCode}
           onChange={(e) => setIfscCode(e.target.value)}
         />
@@ -367,6 +376,7 @@ const StudentDashboard = () => {
         <label>Bank Name:</label>
         <input
           type="text"
+          className={styles.input}
           value={bankName}
           onChange={(e) => setBankName(e.target.value)}
         />
@@ -376,6 +386,7 @@ const StudentDashboard = () => {
         <label>UPI ID (optional):</label>
         <input
           type="text"
+          className={styles.input}
           value={upiId}
           onChange={(e) => setUpiId(e.target.value)}
           placeholder="example@upi"

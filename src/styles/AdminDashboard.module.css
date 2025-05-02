@@ -5,26 +5,28 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.header h2 {
+.header h1 {
   color: #ff9933;
   font-size: 2.2rem;
-  margin-bottom: 10px;
+  margin: 25px 0;
 }
 
 h3 {
   color: #666;
   font-size: 1.6rem;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .container {
-  background-color: #ffa851;
+  background: linear-gradient(135deg, #f0f4ff, #e4eaff);
   color: #333;
   border-radius: 15px;
   border: 2px solid #a45a00;
   font-family: "Poppins", sans-serif;
   padding: 30px 20px;
   min-height: 100vh;
+  margin-bottom: 15px;
+  margin-top: 15px;
 }
 
 .emptyContainer {
@@ -47,7 +49,7 @@ h3 {
 
 .card {
   background-color: #ffffff;
-  border: 2px solid #ff8c00;
+  border-left: 5px solid #ff8c00;
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
@@ -232,7 +234,7 @@ h3 {
 }
 
 @media (max-width: 480px) {
-  h2 {
+  h1 {
     font-size: 1.8rem;
   }
 

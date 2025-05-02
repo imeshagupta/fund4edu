@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 150px);
-  background-color: #222;
+  background: linear-gradient(135deg, #f0f4ff, #e4eaff);
   padding: 1rem;
 }
 
@@ -15,6 +15,7 @@
   width: 100%;
   max-width: 400px;
   text-align: center;
+  border-left: 5px solid #ff8c00;
   transition: all 0.3s ease-in-out;
 }
 

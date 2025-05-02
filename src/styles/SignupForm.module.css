@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 120px);
-  background: linear-gradient(135deg, #1a1a1a, #222);
+  background: linear-gradient(135deg, #f0f4ff, #e4eaff);
   padding: 40px 20px;
   box-sizing: border-box;
 }
@@ -14,15 +14,14 @@
 }
 
 .signupBox {
-  background: rgba(149, 91, 20, 0.728);
+  background-color: white;
   padding: 25px;
   border-radius: 12px;
-
+  border-left: 5px solid #ff8c00;
   width: 100%;
   max-width: 400px;
   text-align: center;
   backdrop-filter: blur(10px);
-  border: 2px solid rgba(78, 43, 1, 0.3);
 }
 
 .title {
@@ -50,7 +49,8 @@
 .select {
   width: 100%;
   padding: 10px;
-  border: 1px solid rgba(255, 140, 0, 0.3);
+  border: 1px solid #ccc;
+  border-radius: 6px;
   border-radius: 5px;
   font-size: 16px;
   outline: none;
@@ -61,7 +61,7 @@
 .input:focus,
 .select:focus {
   border-color: #ff8c00;
-  box-shadow: 0px 0px 8px rgba(255, 140, 0, 0.5);
+  outline: none;
 }
 
 .submitBtn {
@@ -69,7 +69,7 @@
   padding: 12px;
   border: none;
   border-radius: 5px;
-  background: linear-gradient(135deg, #ff8c00, #d62828);
+  background-color: #ff8c00;
   color: white;
   font-size: 16px;
   cursor: pointer;
@@ -77,18 +77,19 @@
 }
 
 .submitBtn:hover {
-  background: linear-gradient(135deg, #d62828, #ff8c00);
-  transform: scale(1.05);
+  background-color: #ff8c00;
+  transform: scale(1.02);
 }
 
 .loginText {
   margin-top: 10px;
   font-size: 14px;
-  color: #ddd;
+  color: #000000;
 }
 
 .link {
-  color: #ff8c00;
+  color: #f38600;
+  font-weight: bold;
   text-decoration: none;
 }
 

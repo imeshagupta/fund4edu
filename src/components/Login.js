@@ -41,7 +41,6 @@ const Login = () => {
         setError("User data not found.");
       }
     } catch (err) {
-      console.error(err);
       setError("Invalid email or password. Please try again.");
     }
   };
