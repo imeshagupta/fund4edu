@@ -1,9 +1,7 @@
 .testimonials {
   padding: 60px 20px;
   background: linear-gradient(135deg, #1a1a1a, #333);
-  color: white;
   width: 100%;
-
   text-align: center;
   position: relative;
   z-index: 1;
@@ -31,31 +29,27 @@
 }
 
 .testimonialCard {
-  background: rgba(255, 140, 0, 0.2);
+  background-color: white;
   padding: 30px 20px;
   border-radius: 15px;
-
+  border-left: 5px solid #ff8c00;
   width: 100%;
   min-height: 280px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: white;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 140, 0, 0.4);
   animation: fadeIn 1s ease-in-out;
   transition: transform 0.3s ease-in-out, background 0.3s ease-in-out;
 }
 
 .testimonialCard:hover {
   transform: scale(1.05);
-  background: rgba(255, 140, 0, 0.3);
 }
 
 .feedback {
   font-size: 18px;
   font-style: italic;
-  color: #ddd;
+  color: black;
   margin-bottom: 20px;
   line-height: 1.6;
   flex-grow: 1;

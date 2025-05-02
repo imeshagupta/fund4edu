@@ -17,11 +17,7 @@ const faqsData = [
     answer:
       "Yes, we ensure secure transactions and verify all students before approving their funding requests.",
   },
-  {
-    question: "Can I donate anonymously?",
-    answer:
-      "Yes, donors have the option to donate anonymously or publicly as per their preference.",
-  },
+
   {
     question: "How long does verification take?",
     answer:
