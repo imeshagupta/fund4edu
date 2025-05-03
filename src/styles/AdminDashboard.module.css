@@ -249,7 +249,15 @@ h3 {
   .card {
     padding: 15px;
   }
-
+  .cardRight img {
+    max-width: 100px;
+  }
+  .cardLeft p {
+    font-size: 14px;
+  }
+  .studentName {
+    font-size: 1.3rem;
+  }
   .actions button,
   .rejectBox button {
     padding: 8px 15px;

@@ -229,6 +229,7 @@ const StudentDashboard = () => {
         { merge: true }
       );
       setSubmitted(true);
+      setStatus("Pending");
       showNotification("Funding request submitted successfully!", "success");
     } catch (error) {
       showNotification("Failed to submit request. Please try again.", "error");
@@ -426,6 +427,19 @@ const StudentDashboard = () => {
             {step === 3 && renderStepThree()}
           </>
         )}
+        {submitted && !isAdmin && status === "Pending" && (
+          <div
+            className={`${styles.statusBox} ${
+              status === "Pending"
+                ? styles.pending
+                : status === "Approved"
+                ? styles.approved
+                : styles.rejected
+            }`}
+          >
+            <strong>Status:</strong> {status}
+          </div>
+        )}
 
         {!isAdmin && submitted && status === "Rejected" && (
           <div className={styles.rejectedBox}>
@@ -438,7 +452,7 @@ const StudentDashboard = () => {
           </div>
         )}
 
-        {!isAdmin && submitted && percentage < 100 && (
+        {!isAdmin && submitted && status === "Approved" && percentage < 100 && (
           <div className={styles.donationsSection}>
             <h2>Donation Progress</h2>
             <div style={{ width: 200, height: 200, margin: "1rem auto" }}>
