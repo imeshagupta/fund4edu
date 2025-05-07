@@ -201,6 +201,65 @@ h3 {
 .cancelBtn:hover {
   background: linear-gradient(to right, #999, #bbb);
 }
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .card {
+    padding: 20px;
+    margin: 10px;
+    min-height: auto;
+    height: auto;
+  }
+
+  .cardContent {
+    align-items: center;
+  }
+
+  .cardLeft {
+    padding-right: 10px;
+  }
+
+  .cardLeft p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 6px 0;
+  }
+
+  .cardRight {
+    max-width: 140px;
+    gap: 8px;
+  }
+
+  .cardRight img {
+    max-width: 120px;
+    border-radius: 10px;
+  }
+
+  .studentName {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+  }
+
+  .actions {
+    margin-top: 15px;
+    gap: 10px;
+  }
+
+  .actions button,
+  .rejectBox button {
+    font-size: 15px;
+    padding: 10px 20px;
+    min-width: 110px;
+  }
+
+  .textarea {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
 
 @media (max-width: 768px) {
   .grid {
