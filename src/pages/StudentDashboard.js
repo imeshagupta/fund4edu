@@ -452,7 +452,7 @@ const StudentDashboard = () => {
           </div>
         )}
 
-        {!isAdmin && submitted && status === "Approved" && percentage < 100 && (
+        {!isAdmin && submitted && status === "Paid" && percentage < 100 && (
           <div className={styles.donationsSection}>
             <h2>Donation Progress</h2>
             <div style={{ width: 200, height: 200, margin: "1rem auto" }}>
